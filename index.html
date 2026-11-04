@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>제주 오션 골프 19</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -462,6 +462,10 @@ body.phonev .app{top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50
 .pvpf{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted)}
 .pvpf input{font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)}
 .pvpst{font-size:13px;line-height:1.5;color:var(--ink)!important;min-height:1.5em}.pvpst.err{color:var(--bad)!important}
+html,body,.app,.view{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.view{touch-action:none}.ov .box,.sheet{touch-action:pan-y}
+*{-webkit-touch-callout:none}input{-webkit-touch-callout:default;-webkit-user-select:text;user-select:text}
+button,.gauges,.hud{-webkit-user-select:none;user-select:none}
 </style>
 </head>
 <body>
@@ -2512,6 +2516,13 @@ const netApi=(p,method,body)=>fetch(`${NET_DB}/rooms/${p}.json`,{method:method||
 const netClean=s=>String(s||'').replace(/[<>&"'`]/g,'').trim().slice(0,8);
 const netPad=n=>String(n).padStart(4,'0');
 function netSet(root,path,val,merge){const k=path.split('/').filter(Boolean);if(!k.length){if(merge)return Object.assign(root||{},val);return val}root=root||{};let o=root;for(let i=0;i<k.length-1;i++){if(typeof o[k[i]]!=='object'||!o[k[i]])o[k[i]]={};o=o[k[i]]}const l=k[k.length-1];if(merge)o[l]=Object.assign(o[l]||{},val);else if(val===null)delete o[l];else o[l]=val;return root}
+{const typing=e=>e.target&&e.target.closest&&e.target.closest('input,textarea');let lastEnd=0;
+ ['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+ document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
+ document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastEnd<350&&!typing(e)){e.preventDefault();const b=e.target.closest&&e.target.closest('button');if(b&&!b.disabled)b.click()}lastEnd=now},{passive:false});
+ document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+ const vm=document.querySelector('meta[name=viewport]'),snap=()=>{if(typing({target:document.activeElement}))return;const v=window.visualViewport;if(scrollX||scrollY)window.scrollTo(0,0);if(v&&v.scale>1.01&&vm){const c=vm.content;vm.content=c+',minimum-scale=1';setTimeout(()=>{vm.content=c},60)}};
+ document.addEventListener('focusout',()=>setTimeout(snap,120));if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout(snap,200));addEventListener('orientationchange',()=>setTimeout(snap,300));addEventListener('pageshow',snap)}
 function netStatus(t,err){const e=$('#pvpSt');e.textContent=t;e.classList.toggle('err',!!err)}
 function netListen(N){const on=e=>{if(G.net!==N)return;let m;try{m=JSON.parse(e.data)}catch(x){return}if(!m)return;N.room=netSet(N.room,m.path,m.data,e.type==='patch');netOnRoom()};const es=new EventSource(`${NET_DB}/rooms/${N.code}.json`);es.addEventListener('put',on);es.addEventListener('patch',on);N.es=es}
 function netLook(){return JSON.parse(JSON.stringify(equipItems()))}
