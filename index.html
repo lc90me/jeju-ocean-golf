@@ -484,6 +484,31 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
 #sync h4{margin-top:6px}
 @container (max-width:560px){.ov .moderow{grid-template-columns:1fr 1fr!important}.ov .moderow [data-mode="event"]{grid-column:1/-1;order:3}}
 .affr{color:var(--accent);font-weight:700}
+#pvpForm,#pvpLobby{display:flex;flex-direction:column;gap:10px}
+.pvpmax{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pvpmax button{padding:9px 0;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit;font-weight:700}
+.pvpmax button[aria-pressed="true"]{background:var(--accent,#f59e0b);color:#fff;border-color:transparent}
+.lobhead{display:flex;justify-content:space-between;align-items:flex-end}
+.lobhead small{display:block;font-size:12px;color:var(--muted)}
+.lobhead b{font-size:30px;letter-spacing:.18em;font-variant-numeric:tabular-nums}
+.lobhead span{font-weight:700;color:var(--muted)}
+.lobby{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.lobby li{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.lobby li i{width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(0,0,0,.35);flex:none}
+.lobby li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lobby li em{font-style:normal;font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(245,158,11,.18);color:var(--ink)}
+.lobby li em.me{background:rgba(42,169,192,.2)}
+.lobby li.empty{opacity:.5;border-style:dashed}.lobby li.empty i{background:transparent;box-shadow:0 0 0 1.5px var(--line)}
+.emorow,.emotray{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.emorow button,.emotray button{font-size:22px;line-height:1;padding:7px 8px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer}
+.emobtn{position:fixed;right:max(12px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 112px);z-index:40;width:42px;height:42px;border-radius:50%;border:0;background:rgba(10,32,34,.72);font-size:22px;color:#fff}
+.emotray{position:fixed;right:max(12px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 160px);z-index:40;width:180px;padding:8px;border-radius:16px;background:rgba(10,32,34,.85)}
+.emotray button{background:rgba(255,255,255,.1);border-color:transparent}
+.emofeed{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 70px);z-index:120;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.emo{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 12px;border-radius:99px;background:rgba(10,32,34,.82);color:#fff;font-size:13px;animation:emoIn 3.6s ease forwards}
+.emo span{font-size:26px;line-height:1}
+@keyframes emoIn{0%{opacity:0;transform:translateY(-8px) scale(.9)}10%,80%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-6px)}}
+@media (orientation:portrait){.emobtn{right:auto;top:auto;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 108px)}.emotray{right:auto;top:auto;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 158px)}}
 </style>
 </head>
 <body>
@@ -613,7 +638,7 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
       <button type="button" data-mode="event" aria-pressed="false">🍊 감귤 축제 이벤트<small>축제 코스 · 귤 1.5배 · 한정 보상</small></button>
       <button type="button" data-mode="tour" aria-pressed="false">제주 오픈 토너먼트<small>3연승하면 우승 · 큰 상금</small></button>
     </div>
-    <button type="button" id="pvpOpen" class="x">친구와 1대1 대결 · 1,000귤 걸기</button>
+    <button type="button" id="pvpOpen" class="x">친구 대결 (최대 4명) · 1,000귤 걸기</button>
     <div class="tourbox" id="tourBox" hidden></div>
     <h4 id="oppHead">1. 대결 상대</h4>
     <div class="opp" id="opp"></div>
@@ -629,13 +654,16 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
   </div>
 </div>
 
-<div class="ov" id="pvp" hidden><div class="box"><div class="shop-head"><h3>친구 대결</h3><button id="pvpClose" class="x" type="button">닫기</button></div><p>서로 다른 휴대폰에서 1대1로 대결해요. 둘 다 1,000귤을 걸고, 이긴 사람이 2,000귤을 가져가요. 비기면 돌려받아요. 상대가 5분 안에 돌아오지 않으면 몰수승이에요.</p><label class="pvpf">닉네임<input id="pvpName" maxlength="8" autocomplete="off" placeholder="8글자까지"></label><button id="pvpMake" type="button">방 만들기</button><label class="pvpf">친구에게 받은 코드<input id="pvpCode" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리 숫자"></label><button id="pvpJoin" class="x" type="button">코드로 입장</button><p id="pvpSt" class="pvpst" aria-live="polite"></p></div></div>
+<div class="ov" id="pvp" hidden><div class="box"><div class="shop-head"><h3>친구 대결</h3><button id="pvpClose" class="x" type="button">닫기</button></div><div id="pvpForm"><p>서로 다른 휴대폰에서 2~4명이 함께 쳐요. 모두 1,000귤씩 걸고, 1등이 판돈을 모두 가져가요. 공동 1등이면 나눠 가져요. 1분 넘게 응답이 없으면 기권 처리돼요.</p><label class="pvpf">닉네임<input id="pvpName" maxlength="8" autocomplete="off" placeholder="8글자까지"></label><div class="pvpf"><span>인원</span><div class="pvpmax" id="pvpMax" role="group" aria-label="인원"><button type="button" data-m="2" aria-pressed="true">2명</button><button type="button" data-m="3" aria-pressed="false">3명</button><button type="button" data-m="4" aria-pressed="false">4명</button></div></div><button id="pvpMake" type="button">방 만들기</button><label class="pvpf">친구에게 받은 코드<input id="pvpCode" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리 숫자"></label><button id="pvpJoin" class="x" type="button">코드로 입장</button></div>
+<div id="pvpLobby" hidden><div class="lobhead"><div><small>방 코드</small><b id="pvpCodeBig">----</b></div><span id="pvpCount">1/2명</span></div><ul class="lobby" id="pvpPeople"></ul><div class="emorow" id="pvpEmo" aria-label="이모티콘 보내기"></div><button id="pvpStart" type="button" hidden disabled>시작하기</button><button id="pvpLeave" class="x" type="button">방 나가기</button></div>
+<p id="pvpSt" class="pvpst" aria-live="polite"></p></div></div>
 <div class="ov" id="rank" hidden><div class="box"><div class="shop-head"><h3>주간 랭킹</h3><button id="rankClose" class="x" type="button">닫기</button></div><p>월요일마다 새로 시작해요. 시작 화면에서 고른 코스의 최저타 기록이에요. 라운드를 끝까지 마치면 자동으로 올라가요.</p><label class="pvpf">랭킹에 표시할 닉네임<input id="rankNick" maxlength="8" autocomplete="off" placeholder="8글자까지 · 비우면 기록 안 됨"></label><b id="rankHead"></b><div class="lenrow" id="rankTabs"><button type="button" data-l="3">3홀</button><button type="button" data-l="6">6홀</button><button type="button" data-l="9">9홀</button></div><div id="rankList"></div></div></div>
 <div class="ov" id="sync" hidden><div class="box"><div class="shop-head"><h3>기기 동기화</h3><button id="syncClose" class="x" type="button">닫기</button></div><p>가입 없이 코드와 비밀번호로 여러 기기에서 같은 진행도로 플레이해요. 연결한 기기끼리는 자동으로 최신 진행도로 맞춰져요.</p>
 <div id="syncOff"><h4>이 기기 진행도를 저장하고 코드 받기</h4><label class="pvpf">비밀번호 (4자 이상, 잊으면 찾을 수 없어요)<input id="syncPw1" type="password" maxlength="20" autocomplete="new-password"></label><button id="syncMake" type="button">저장하고 코드 받기</button>
 <h4>다른 기기에서 저장한 진행도 불러오기</h4><label class="pvpf">동기화 코드<input id="syncCodeIn" maxlength="6" autocomplete="off" placeholder="6자리"></label><label class="pvpf">비밀번호<input id="syncPw2" type="password" maxlength="20" autocomplete="current-password"></label><button id="syncLoad" class="x" type="button">불러오기 · 이 기기 진행도는 덮어써져요</button></div>
 <div id="syncOn" hidden><h4>연결됨 · 동기화 코드</h4><div class="scode"><b id="syncCode"></b><button id="syncCopy" class="x" type="button">복사</button></div><p>다른 기기에서 이 코드와 비밀번호를 입력하세요. 두 기기에서 동시에 플레이하면 마지막에 저장한 쪽이 남아요.</p><button id="syncPush" class="x" type="button">지금 저장하기</button><button id="syncOffBtn" class="x" type="button">이 기기 연결 해제</button></div>
 <p id="syncSt" class="pvpst" aria-live="polite"></p></div></div>
+<div class="emofeed" id="emoFeed" aria-live="polite"></div><button type="button" id="emoBtn" class="emobtn" hidden aria-label="이모티콘">😊</button><div class="emotray" id="emoTray" hidden></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="ov" id="prof" hidden>
   <div class="box profbox">
@@ -732,8 +760,9 @@ const NSTYLE=[
  {style:'퍼팅 여제',dist:16,risk:.6,wind:1,short:.25,read:1,putM:.25},
  {style:'파도 장타',dist:28,risk:.85,wind:1,short:.25,read:1,putM:.35},
  {style:'바다의 왕',dist:24,risk:.75,wind:1,short:.18,read:1,putM:.22}];
+[[45,42,20,25],[50,48,22,45],[55,64,25,28],[60,55,28,35],[68,66,32,45]].forEach(([acc,dir,forg,wind],k)=>{const S=NSTYLE[13+k];S.dist+=4;S.base={acc,dir,forg,wind}});
 (()=>{const W=[100,140,190,250,320,400,490,590,700,850,1100,1400,1800,2300,2900,3600,4400,5500];NPCS.forEach((n,i)=>{const t=Math.min(i/9,1);Object.assign(n,{st:NSTYLE[i]});n.reward={win:W[i],hole:Math.round(W[i]/8)};
-  n.pow=+(.16-.115*t).toFixed(3);n.acc=+(.18-.125*t).toFixed(3);n.aim=+(6.5-5.1*t).toFixed(2);n.read=+(.08+.7*t).toFixed(2);n.blunder=+(.28-.24*t).toFixed(2);if(i>9){const k=i-10;n.pow=[.038,.03,.022,.018,.015,.013,.011,.008][k];n.acc=[.046,.036,.026,.021,.018,.015,.012,.009][k];n.aim=[1.15,.95,.75,.62,.55,.48,.42,.34][k];n.read=[.85,.92,1,1,1,1,1,1][k];n.blunder=[.03,.02,.01,.008,.006,.005,.004,.002][k]}const S=n.st;if(S.read)n.read=S.read;if(S.accM)n.acc*=S.accM;if(S.aimM)n.aim*=S.aimM;if(S.blunM)n.blunder*=S.blunM;n.note+=` · ${S.style}`})})();
+  n.pow=+(.16-.115*t).toFixed(3);n.acc=+(.18-.125*t).toFixed(3);n.aim=+(6.5-5.1*t).toFixed(2);n.read=+(.08+.7*t).toFixed(2);n.blunder=+(.28-.24*t).toFixed(2);if(i>9){const k=i-10;n.pow=[.038,.03,.022,.014,.012,.01,.008,.006][k];n.acc=[.046,.036,.026,.016,.014,.012,.009,.007][k];n.aim=[1.15,.95,.75,.5,.44,.38,.33,.27][k];n.read=[.85,.92,1,1,1,1,1,1][k];n.blunder=[.03,.02,.01,.005,.004,.003,.002,.001][k]}const S=n.st;if(S.read)n.read=S.read;if(S.accM)n.acc*=S.accM;if(S.aimM)n.aim*=S.aimM;if(S.blunM)n.blunder*=S.blunM;n.note+=` · ${S.style}`})})();
 const TOUR_OPP=[3,6,9];
 const SHOP={
  shirt:{label:'상의',items:[{id:'s0',name:'기본 화이트',price:0,c:'#f1f3f5'},{id:'s1',name:'한라 블루',price:80,c:'#2f6fd6',st:{acc:1}},{id:'s2',name:'귤 오렌지',price:120,c:'#f58a18',st:{acc:1}},{id:'s3',name:'현무암 차콜',price:150,c:'#3a3d42',st:{acc:2}},{id:'s4',name:'유채 옐로',price:180,c:'#f2cf2a',st:{acc:2}},{id:'s5',name:'오름 그린',price:220,c:'#4f8a3a',st:{acc:3}},{id:'s6',name:'노을 코랄',price:260,c:'#f0735a',st:{acc:3}},{id:'s7',name:'바다 민트',price:300,c:'#4fc3b8',st:{acc:4}},
@@ -799,7 +828,7 @@ const owns=it=>(it.price===0&&it.gift==null)||SV.owned.includes(it.id);
 function equipItems(){const o={};for(const k in SHOP){o[k]=SHOP[k].items.find(i=>i.id===SV.equip[k]&&owns(i))||SHOP[k].items[0]}return o}
 const GEAR=['shirt','pants','shoes','hat','acc','ball'];
 function gearSt(){const E=equipItems(),o={};GEAR.forEach(k=>{const st=E[k].st||{};for(const q in st)o[q]=(o[q]||0)+st[q]});return o}
-function cs(ci){if(ci==null)ci=G.club;if(G.net&&PL[G.cur]&&PL[G.cur].npc)return{};if(typeof PL!=='undefined'&&PL[G.cur]&&PL[G.cur].npc){const S=NPCS[G.opp]&&NPCS[G.opp].st;return S?{dist:S.dist}:{}}const a={...(equipItems()[CAT[ci]].st||{})},g=gearSt(),k2=skillSt(ci);for(const q in g)a[q]=(a[q]||0)+g[q];for(const q in k2)a[q]=(a[q]||0)+k2[q];if(a.read)a.read=Math.min(100,a.read);['acc','dir','forg'].forEach(q=>{if(a[q]>92)a[q]=92});return a}
+function cs(ci){if(ci==null)ci=G.club;if(G.net&&PL[G.cur]&&PL[G.cur].npc)return{};if(typeof PL!=='undefined'&&PL[G.cur]&&PL[G.cur].npc){const S=NPCS[G.opp]&&NPCS[G.opp].st;return S?{dist:S.dist,...(S.base||{})}:{}}const a={...(equipItems()[CAT[ci]].st||{})},g=gearSt(),k2=skillSt(ci);for(const q in g)a[q]=(a[q]||0)+g[q];for(const q in k2)a[q]=(a[q]||0)+k2[q];if(a.read)a.read=Math.min(100,a.read);['acc','dir','forg'].forEach(q=>{if(a[q]>92)a[q]=92});return a}
 const clubD=ci=>CLUBS[ci].d*(1+(cs(ci).dist||0)/100);
 const THEMES={
  coast:{label:'해안',col:'#2fa3bf',rough:'#5a9d47',cut:'#6fb954',cut2:'#649f49',fw:'#7ccb5c',fw2:'#8cd96b',fw3:'#6fbd52',far:'#5f9a4c',far2:'#7aa856',tree:['#3d8f46','#4fa04a','#2f7d3e']},
@@ -1052,8 +1081,8 @@ const inPZ=(y,sd)=>(H.pz||(setupBounds(),H.pz)).some(z=>z.side===sd&&y>=z.y0&&y<
 const backY=x=>H.L+36+4*Math.sin(x/17+(H.bd?H.backP:(setupBounds(),H.backP)));
 function outAt(p){const off=p.x-cx(p.y),sd=off<0?-1:1;if(oceanSide(sd))return null;return Math.abs(off)>bnd(p.y,sd)?(inPZ(p.y,sd)?'PENALTY':'OB'):null}
 function lieAt(p){
+  if(H.ocean){const d=shoreD(p.x,p.y);if(d>(H.shore==='cliff'?-.8:-1.2))return'OCEAN';if(H.shore==='beach'&&d>-11&&!(Math.abs(p.x)>112||p.y>backY(p.x)||p.y<-28))return'BEACH'}
   if(Math.abs(p.x)>112||p.y>backY(p.x)||p.y<-28)return'OB';
-  if(H.ocean){const d=shoreD(p.x,p.y);if(d>(H.shore==='cliff'?-.8:-1.2))return'OCEAN';if(H.shore==='beach'&&d>-11)return'BEACH'}
   for(const w of H.water)if(inEll(p.x,p.y,w))return'WATER';
   if(H.isl){const d=dist(p,PIN);if(d>H.gr+2.6&&d<H.isl.R)return'WATER'}
   if(dist(p,PIN)<H.gr)return gIn(p)?'GREEN':'FAIRWAY';
@@ -1586,7 +1615,7 @@ function stepReplay(now){const rp=G.rp,r=rp.r,P=r.pts;let rt=(now-rp.t0-1000)*rp
   if(rt>r.total+900)endReplay()}
 $('#repBtn').onclick=()=>{if(G.phase!=='aim'&&G.phase!=='holed')return;audioInit();startReplay(null,false)};
 function impactFx(now){sImpact(tierOf());
-  const T=tierOf(),s=clamp(G.power,.15,1.1),b=G.ball,z=hAt(b.x,b.y)+BR;G.fxT=T;if(isMe()&&T.k==='perfect'){const n=stat('perfects');gainXP(dx(5));if(n>=10)badge('perf10');if(n>=50)badge('perf50');if(n>=200)badge('perf200')}if(G.rec){G.rec.T=T;G.rec.dir={...G.fdir};G.rec.start={...b,z:z-BR}}
+  const T=tierOf(),s=clamp(G.power,.15,1.1),b=G.ball,z=hAt(b.x,b.y)+BR;G.fxT=T;if(isMe()&&T.k==='perfect'){const n=stat('perfects');gainXP(dx(5));if(n>=10)badge('perf10');if(n>=50)badge('perf50');if(n>=200)badge('perf200');if(n>=500)badge('perf500')}if(G.rec){G.rec.T=T;G.rec.dir={...G.fdir};G.rec.start={...b,z:z-BR}}
   const el=$('#hit');
   if(T.t){el.innerHTML=`${T.t}<small>파워 ${Math.round(G.power*100)}% · 정확도 ${accScore()}점 · 헤드 스피드 ${(HS[G.club]*G.power).toFixed(1)}m/s</small>`;el.style.color=T.c;el.classList.remove('go');void el.offsetWidth;el.classList.add('go')}
   if(!R3||!fx)return;
@@ -1880,7 +1909,7 @@ function drawMM(){
   mctx.lineWidth=1.6*d;mctx.strokeStyle='#e8433a';mctx.beginPath();[...G.shots,G.vis].forEach((p,i)=>{const[x,y]=P(p);i?mctx.lineTo(x,y):mctx.moveTo(x,y)});mctx.stroke();
   if(G.phase!=='flight'&&G.phase!=='holed'){const a=rot(G.aim),L=previewLen();const[x1,y1]=P(G.ball),[x2,y2]=P({x:G.ball.x+a.x*L,y:G.ball.y+a.y*L});mctx.setLineDash([3*d,3*d]);mctx.strokeStyle='#fff';mctx.beginPath();mctx.moveTo(x1,y1);mctx.lineTo(x2,y2);mctx.stroke();mctx.setLineDash([])}
   const[px,py]=P(PIN);mctx.fillStyle='#e8433a';mctx.fillRect(px-1*d,py-9*d,2*d,9*d);mctx.beginPath();mctx.moveTo(px+d,py-9*d);mctx.lineTo(px+7*d,py-7*d);mctx.lineTo(px+d,py-5*d);mctx.fill();
-  {const o=PL[1-G.cur].h;if(o&&!o.done){mctx.lineWidth=1.2*d;mctx.strokeStyle='rgba(255,255,255,.6)';mctx.beginPath();o.shots.concat([o.ball]).forEach((q,i)=>{const[x,y]=P(q);i?mctx.lineTo(x,y):mctx.moveTo(x,y)});mctx.stroke();const[ox2,oy2]=P(o.ball);mctx.fillStyle=pcol(1-G.cur);mctx.strokeStyle='#111';mctx.beginPath();mctx.arc(ox2,oy2,3.4*d,0,7);mctx.fill();mctx.stroke()}}
+  PL.forEach((_p,_oi)=>{if(_oi===G.cur)return;const o=_p.h;if(o&&!o.done){mctx.lineWidth=1.2*d;mctx.strokeStyle='rgba(255,255,255,.6)';mctx.beginPath();o.shots.concat([o.ball]).forEach((q,i)=>{const[x,y]=P(q);i?mctx.lineTo(x,y):mctx.moveTo(x,y)});mctx.stroke();const[ox2,oy2]=P(o.ball);mctx.fillStyle=pcol(_oi);mctx.strokeStyle='#111';mctx.beginPath();mctx.arc(ox2,oy2,3.4*d,0,7);mctx.fill();mctx.stroke()}});
   const[bx,by]=P(G.vis);mctx.fillStyle=pcol(G.cur);mctx.strokeStyle='#111';mctx.lineWidth=1.5*d;mctx.beginPath();mctx.arc(bx,by,4*d,0,7);mctx.fill();mctx.stroke();
   mctx.fillStyle='#fff';mctx.font=`700 ${10*d}px system-ui`;mctx.fillText(Math.round(dist(G.ball,PIN))+'y',5*d,h-6*d);
   if(G.mmPick){const q=G.mmPick,[bx2,by2]=P(G.ball),[qx,qy]=P(q),db=Math.round(dist(G.ball,q)),dpn=Math.round(dist(q,PIN));
@@ -1905,7 +1934,7 @@ function drawMM(){
 const PL=[{name:'나',npc:false,scores:[],h:null},{name:'',npc:true,scores:[],h:null}];
 const gs=()=>(Math.random()+Math.random()+Math.random()-1.5)*2;
 const who=()=>PL[G.cur].npc?PL[G.cur].name:'나';
-const pcol=i=>i===0?'#ffffff':NPCS[G.opp].tag;
+const pcol=i=>G.net&&G.net.started?NET_COL[PL[i]?PL[i].seat:0]||'#fff':i===0?'#ffffff':NPCS[G.opp].tag;
 const strokesOf=i=>i===G.cur?G.strokes:PL[i].h.strokes;
 function resetHoleState(){PL.forEach(p=>p.h={ball:{x:0,y:0},lie:'TEE',strokes:0,shots:[{x:0,y:0}],done:false})}
 function saveCur(){Object.assign(PL[G.cur].h,{ball:{...G.ball},lie:G.lie,strokes:G.strokes,shots:G.shots})}
@@ -1974,7 +2003,7 @@ function buildClub(type,ti){
   g.userData.emis=emis;g.userData.ti=ti;return g;
 }
 function setClub(ti,ci=G.club){if(!rigMat||!rigMat.clubHolder)return;const k=CAT[ci]+ti;if(rigMat.clubKey===k)return;rigMat.clubKey=k;const h=rigMat.clubHolder;while(h.children.length)h.remove(h.children[0]);h.add(clubCache[k]||(clubCache[k]=buildClub(CAT[ci],ti)))}
-function dressRig(w=G.cur,ci=G.club){if(!R3||!rigMat)return;const n=NPCS[G.opp],rem=G.net&&PL[w].npc&&G.net.look,npc=PL[w].npc&&!rem,E=rem?G.net.look:equipItems();
+function dressRig(w=G.cur,ci=G.club){if(!R3||!rigMat)return;const n=NPCS[G.opp],rem=G.net&&PL[w].npc&&PL[w].look,npc=PL[w].npc&&!rem,E=rem?PL[w].look:equipItems();
   const fem=npc&&n.g==='f',hat=npc?(fem?{type:'visor',c:'#ffffff',trim:n.skirt}:{type:'cap',c:n.cap}):E.hat,sh=npc?{c:n.col}:E.shirt,pa=npc?{c:'#26324a'}:E.pants,so=npc?{c:'#f4f4f4'}:E.shoes,ac=npc?{type:'none'}:E.acc;
   const em=(mt,c,k)=>{if(!mt.emissive)return;mt.emissive.copy(col(c||'#000000'));mt.emissiveIntensity=c?(k||.3):0};
   rigMat.shirt.forEach(m=>{m.color.copy(col(sh.c));em(m,sh.glow?sh.trim:null,.18)});
@@ -1986,7 +2015,7 @@ function dressRig(w=G.cur,ci=G.club){if(!R3||!rigMat)return;const n=NPCS[G.opp],
   rigMat.glasses.visible=ac.type==='glasses';if(ac.type==='glasses')rigMat.glassesMat.color.copy(col(ac.c));em(rigMat.glassesMat,ac.glow&&ac.type==='glasses'?ac.c:null,.5);
   rigMat.hands.color.copy(col(ac.type==='glove'?ac.c:'#ffffff'));rigMat.pend.visible=ac.type==='pendant';
   setClub(npc?(G.opp>=10?G.opp-3:0):Math.max(0,TIERN.indexOf(E[CAT[ci]].tier)),ci);
-  ball.material.color.copy(col(npc?n.tag:E.ball.c));ball.material.emissive.copy(col(!npc&&E.ball.glow?E.ball.c:'#000000'));ball.material.emissiveIntensity=!npc&&E.ball.glow?.45:0;ball2.material.color.copy(col(npc?E.ball.c:n.tag));mark2.material.color.copy(col(pcol(1-G.cur)))}
+  ball.material.color.copy(col(npc?n.tag:E.ball.c));ball.material.emissive.copy(col(!npc&&E.ball.glow?E.ball.c:'#000000'));ball.material.emissiveIntensity=!npc&&E.ball.glow?.45:0;ball2.material.color.copy(col(npc?E.ball.c:n.tag));mark2.material.color.copy(col(pcol(G.cur?0:1)))}
 function cupMode(mesh,on){if(!mesh)return;const m=mesh.material;if(m.userData.cup===on)return;m.userData.cup=on;m.depthTest=!on;m.depthWrite=!on;m.stencilWrite=on;m.stencilRef=1;m.stencilFunc=THREE.EqualStencilFunc;mesh.renderOrder=on?13:0;mesh.castShadow=!on;m.needsUpdate=true}
 function dropSeg(segs){segs.push({dur:480,cup:true,at:u=>{const a=u*16,r=.17*(1-u)*(1-u),q=Math.min(1,u*1.3);return{x:PIN.x+Math.cos(a)*r,y:PIN.y+Math.sin(a)*r,z:PIN.z-(CUP_D-.03)*q*q}}})}
 function loadCur(i){cupMode(ball,false);G.cur=i;const h=PL[i].h;G.ball={...h.ball};G.lie=h.lie;G.strokes=h.strokes;G.shots=h.shots;G.vis={...G.ball,z:hAt(G.ball.x,G.ball.y)};G.hideBall=false;G.holedIn=false;G.trail=[];setTrail();dressRig()}
@@ -2023,8 +2052,8 @@ function beginTurn(i,first){
   else{G.phase='aim';setMsg(first?`${H.desc} 내가 먼저 쳐요.`:`내 차례예요 · 홀까지 ${rem}y`)}
   renderAll();
 }
-function nextTurn(){const live=[0,1].filter(i=>!PL[i].h.done);if(!live.length){endHole();return}
-  live.sort((a,b)=>dist(PL[b].h.ball,PIN)-dist(PL[a].h.ball,PIN)||(G.net?(a===G.net.hostIdx?-1:1):0));beginTurn(live[0])}
+function nextTurn(){const live=PL.map((_,i)=>i).filter(i=>!PL[i].h.done);if(!live.length){endHole();return}
+  live.sort((a,b)=>dist(PL[b].h.ball,PIN)-dist(PL[a].h.ball,PIN)||(G.net?PL[a].seat-PL[b].seat:0));beginTurn(live[0])}
 function finishRec(){const r=G.rec;if(!r||r.pts.length<3||!r.start)return null;r.end=r.pts[r.pts.length-1];r.total=r.end.t;G.lastRec=r;G.rec=null;return r}
 function afterShot(ms,fn){const r=finishRec();const mine=r&&!PL[r.who].npc,auto=mine&&(r.T&&r.T.k==='perfect'&&r.club!==PT||r.holed&&dist(r.start,PIN)>8);
   if(auto)wait(900,()=>startReplay(()=>wait(300,fn),true));else wait(ms,fn)}
@@ -2144,7 +2173,7 @@ function landFx(e,l){if(G.club!==PT)sLand(l);
 function finishShot(){
   const r=G.plan;G.hideBall=false;G.glowOn=false;
   if(r.pen){
-    sPenalty();if(isMe()&&r.pen==='OCEAN'&&stat('ocean')>=5)badge('ocean');
+    sPenalty();if(isMe()){if(r.pen==='OCEAN'){const n=stat('ocean');if(n>=5)badge('ocean');if(n>=20)badge('ocean20')}else if(r.pen==='WATER'){if(stat('pond')>=3)badge('pond')}else if(r.pen==='OB'){if(stat('obs')>=10)badge('ob10')}}
     const tee=G.strokes===1,back=()=>{G.ball={x:G.prev.x,y:G.prev.y};G.lie=G.prev.lie;return'1벌타 후 이전 위치에서 다시 칩니다.'};let txt;
     const nm=r.pen==='OB'?'OB가 났어요':r.pen==='PENALTY'?'공이 덤불 페널티 구역(빨간 말뚝)에 들어갔어요':r.pen==='OCEAN'?'공이 바다(페널티 구역)에 들어갔어요':'공이 연못(페널티 구역)에 빠졌어요';
     if(r.pen==='OB'){if(tee&&H.obTee){G.strokes+=2;G.ball={x:H.obTee.x,y:H.obTee.y};G.lie='TEE';txt=`OB티 규칙 · 2벌타 후 OB티에서 ${G.strokes+1}번째 샷을 칩니다.`}else{G.strokes++;txt=back()}}
@@ -2158,26 +2187,26 @@ function finishShot(){
   G.vis={...G.ball,z:hAt(G.ball.x,G.ball.y)};
   if(r.holed&&!r.pen){playerHoled();return}
   if(G.strokes>=10){G.strokes=10;setMsg(`${who()} · 10타에 도달해 공을 집어 들었어요.`);playerHoled(true);return}
-  if(!r.pen&&isMe()){if(G.club===0)dailyMax('long',r.carry);if(G.club===0&&r.carry>(SV.stats.longest||0)){SV.stats.longest=r.carry;persist()}if(G.club===0&&r.carry>=250)badge('long250');if(G.club===0&&r.carry>=280)badge('long280');if((G.prev.lie==='BUNKER'||G.prev.lie==='BEACH')&&G.lie==='GREEN')badge('bsave')}
+  if(!r.pen&&isMe()){if(G.club===0)dailyMax('long',r.carry);if(G.club===0&&r.carry>(SV.stats.longest||0)){SV.stats.longest=r.carry;persist()}if(G.club===0&&r.carry>=250)badge('long250');if(G.club===0&&r.carry>=280)badge('long280');if(G.club===0&&r.carry>=300)badge('long300');if((G.prev.lie==='BUNKER'||G.prev.lie==='BEACH')&&G.lie==='GREEN'){badge('bsave');if(stat('bsaves')>=10)badge('bsave10')}}
   if(!r.pen){const rem=Math.round(dist(G.ball,PIN)),cr=G.cartRelief?' · 카트도로 무벌타 구제':'';G.cartRelief=false;setMsg(G.club===PT?`${who()} · ${r.carry}y 굴렀어요. 홀까지 ${rem}y`:`${who()} · ${CLUBS[G.club].name} ${r.carry}y · ${LIE[G.lie]}${cr}. 홀까지 ${rem}y`)}
   if(!G.net)G.wind.s=+clamp(G.wind.s+(Math.random()-.5)*.6,0,G.diff===4?12:9).toFixed(1);saveCur();afterShot(1200,nextTurn);
 }
 function scoreName(s,par){if(s===1)return'홀인원';const d=s-par;return({'-3':'알바트로스','-2':'이글','-1':'버디','0':'파','1':'보기','2':'더블 보기','3':'트리플 보기'})[d]||(d>0?`+${d}`:`${d}`)}
 function playerHoled(picked){
   if(!picked&&isMe()&&!G.net){const d=G.strokes-H.par,pl=G.plan,from=G.prev?G.prev.lie:'';if(d<=0)dailyAdd('parx');
-    if(G.strokes===1){badge('hio');stat('hio')}else if(d<=-2){badge('eagle');stat('eagles')}else if(d===-1){badge('bird');stat('birdies')}
-    if(pl&&G.club!==PT&&from!=='GREEN'&&G.strokes>1){badge('chip');stat('chipins')}
-    if(G.club===PT&&G.prev&&dist(G.prev,PIN)>=10)badge('lputt');
+    if(G.strokes===1){badge('hio');if(stat('hio')>=3)badge('hio3')}else if(d<=-2){badge('eagle');stat('eagles')}else if(d===-1){badge('bird');if(stat('birdies')>=50)badge('bird50')}
+    if(pl&&G.club!==PT&&from!=='GREEN'&&G.strokes>1){badge('chip');if(stat('chipins')>=10)badge('chip10')}
+    if(G.club===PT&&G.prev&&dist(G.prev,PIN)>=10)badge('lputt');if(G.club===PT&&G.prev&&dist(G.prev,PIN)>=20)badge('lputt20');
     gainXP(dx(10+(d<=-3?200:d===-2?80:d===-1?30:d===0?10:0)));
     const cb=dc(G.strokes===1?500:d<=-3?300:d===-2?100:d===-1?30:d===0?5:0);if(cb){addCoins(cb);G.roundCoins=(G.roundCoins||0)+cb;toast('귤',`${scoreName(G.strokes,H.par)} 보너스`,`+${cb}귤`)}
     const S=SV.stats;if((S.birdies||0)>=5)badge('bird5');if((S.birdies||0)>=25)badge('bird25');if((S.eagles||0)>=3)badge('eagle3');if((S.chipins||0)>=3)badge('chip3')}
   const p=PL[G.cur];p.scores[G.hole]=G.strokes;p.h.done=true;p.h.inCup=!picked;saveCur();G.holedIn=!!picked;if(!picked){sCup(G.strokes-H.par<=-1);G.flagShake=1;G.vis={x:PIN.x,y:PIN.y,z:PIN.z-CUP_D+.03};cupMode(ball,true)}
   if(!picked){if(R3)burst(PIN.x,PIN.y,PIN.z+.5,'#ffd23f',40,3,8);setMsg(`${who()} 홀아웃 · ${scoreName(G.strokes,H.par)} (${G.strokes}타)`,true)}
   afterShot(1700,nextTurn)}
-function endHole(){const a=PL[0].scores[G.hole],b=PL[1].scores[G.hole],n=PL[1].name;G.honor=a<b?0:b<a?1:G.honor;
+function endHole(){if(G.net){const sc=PL.map(p=>p.scores[G.hole]),mn=Math.min(...sc),w=sc.map((v,i)=>v===mn?i:-1).filter(i=>i>=0);if(w.length===1)G.honor=w[0];G.phase='holed';setMsg(`${G.hole+1}번 홀 종료 · `+PL.map((p,i)=>`${i?p.name:'나'} ${sc[i]}타`).join(' · '),true);renderAll();return}const a=PL[0].scores[G.hole],b=PL[1].scores[G.hole],n=PL[1].name;G.honor=a<b?0:b<a?1:G.honor;
   let bonus='';if(a<b&&!G.net){const rw=dc(NPCS[G.opp].reward.hole);G.roundCoins+=rw;addCoins(rw);bonus=` · +${rw}귤`;gainXP(dx(15))}
   G.phase='holed';setMsg(`${G.hole+1}번 홀 종료 · 나 ${a}타 : ${n} ${b}타 · ${a<b?'이번 홀은 내가 이겼어요':a>b?'이번 홀은 상대 승리':'비겼어요'}${bonus}`,true);renderAll()}
-function addCoins(k){SV.coins+=k;persist();updateCoinUI();if(k>0)sCoin();if(SV.coins>=30000&&typeof badge==='function')setTimeout(()=>badge('rich'),0)}
+function addCoins(k){SV.coins+=k;persist();updateCoinUI();if(k>0)sCoin();if(SV.coins>=30000&&typeof badge==='function')setTimeout(()=>{badge('rich');if(SV.coins>=100000)badge('rich100')},0)}
 /* ---------- growth: level, skills, affinity, badges ---------- */
 const BRANCH=['롱게임','숏게임','퍼팅'];
 const SKILLS=[
@@ -2256,13 +2285,21 @@ const BADGES=[
  ['chip','칩인 매직','그린 밖에서 바로 홀인',450],['chip3','칩인 장인','칩인 3번',1000],['lputt','롱퍼트','10y 넘는 퍼팅 성공',300],['bsave','벙커 탈출','벙커에서 그린에 올리기',150],
  ['perf10','퍼펙트 장인','PERFECT 샷 10번',300],['perf50','퍼펙트 마스터','PERFECT 샷 50번',1200],['perf200','퍼펙트 레전드','PERFECT 샷 200번',3000],
  ['long250','장타자','드라이버 250y 넘기기',400],['long280','괴물 장타','드라이버 280y 넘기기',1000],
- ['under','언더파 라운드','9홀을 언더파로 마치기',750],['nobogey','노보기','9홀을 보기 없이 마치기',1000],['sweep','완승','한 홀도 지지 않고 이기기',700],
+ ['under','언더파 라운드','라운드를 언더파로 마치기',750],['nobogey','노보기','라운드를 보기 없이 마치기',1000],['sweep','완승','한 홀도 지지 않고 이기기',700],
  ['opp3','새 얼굴','3단계 상대 열기',250],['opp5','중수 입성','5단계 상대 열기',600],['opp8','고수의 길','8단계 상대 열기',1200],['allopp','도전자','10명 모두 열기',2500],
  ['d2','한 단계 위','보통 난이도 열기',250],['d3','실력자','어려움 난이도 열기',600],['d4','프로의 세계','프로 난이도 열기',1200],['prowin','프로 승리','프로 난이도에서 이기기',2000],
  ['boss','고프로 격파','10단계 고프로를 이기기',1500],['champ','제주 오픈 챔피언','토너먼트 우승',1500],['champ3','왕조','토너먼트 3번 우승',3000],
  ['ocean','바다의 친구','공을 바다에 5번 빠뜨리기',150],['shop5','쇼핑 시작','아이템 5개 사기',250],['col20','수집가','아이템 20개 보유',600],['master','마스터 장비','마스터 등급 클럽 갖기',1000],['legend','전설의 시작','레전드 등급 클럽 갖기',2500],['myth','신화가 되다','신화 등급 장비 갖기',5000],
  ['ult','궁극기','궁극기 스킬 배우기',500],['lv5','레벨 5','골퍼 레벨 5 달성',200],['lv10','레벨 10','골퍼 레벨 10 달성',450],['lv20','레벨 20','골퍼 레벨 20 달성',1200],['lv30','만렙','골퍼 레벨 30 달성',4000],
- ['friend','제주 인싸','NPC 한 명과 친밀도 MAX',750],['friend5','제주 마당발','NPC 5명과 친밀도 MAX',2000],['all5','모두의 친구','모든 NPC 친밀도 MAX',4000],['rich','귤 부자','귤 30,000개 모으기',1000],['d5','지옥 입성','지옥 난이도 열기',2500],['hellwin','지옥 정복','지옥 난이도에서 이기기',5000],['ch2','2막 입성','2막 상대 열기',2000],['dragon','용왕 격파','차귀도 용왕을 이기기',5000],['fest','축제 단골','감귤 축제 포인트 25점',1500]];
+ ['friend','제주 인싸','NPC 한 명과 친밀도 MAX',750],['friend5','제주 마당발','NPC 5명과 친밀도 MAX',2000],['all5','모두의 친구','모든 NPC 친밀도 MAX',4000],['rich','귤 부자','귤 30,000개 모으기',1000],['d5','지옥 입성','지옥 난이도 열기',2500],['hellwin','지옥 정복','지옥 난이도에서 이기기',5000],['ch2','2막 입성','2막 상대 열기',2000],['dragon','용왕 격파','차귀도 용왕을 이기기',5000],['fest','축제 단골','감귤 축제 포인트 25점',1500],
+ ['ocean20','바다 수영 선수','공을 바다에 20번 빠뜨리기',600],['pond','퐁당','연못에 공 3번 빠뜨리기',150],['ob10','OB 단골','OB 10번 내기',200],
+ ['r100','골프 인생','100판 플레이',2500],['w100','제주 골프 전설','100승 달성',5000],['bird50','버디 폭격기','버디 50개',2500],['hio3','홀인원 수집가','홀인원 3번',3000],
+ ['chip10','칩인 달인','칩인 10번',2500],['lputt20','초장거리 퍼트','20y 넘는 퍼팅 성공',800],['long300','300 클럽','드라이버 300y 넘기기',2000],['bsave10','벙커 탈출왕','벙커에서 그린에 10번 올리기',800],
+ ['perf500','퍼펙트 신','PERFECT 샷 500번',5000],['under18','18홀 언더파','18홀을 언더파로 마치기',2000],['nobogey18','완벽한 18홀','18홀을 보기 없이 마치기',3000],
+ ['ch2aff','섬사람','2막 NPC 한 명과 친밀도 MAX',2000],['rich100','귤 재벌','귤 100,000개 모으기',3000],['daily10','성실한 골퍼','오늘의 미션 10개 완료',600],['daily50','미션 마스터','오늘의 미션 50개 완료',2500],
+ ['rank1','랭킹 데뷔','주간 랭킹에 기록 올리기',300],['sync','어디서나 골프','기기 동기화 코드 만들기',300],
+ ['pvp1','첫 친구 대결','친구 대결 참가하기',300],['pvpwin','동네 1등','친구 대결에서 1등 하기',800],['pvp4','4인 대결 왕','4명 대결에서 단독 1등',2000],['emo20','이모티콘 수다쟁이','이모티콘 20번 보내기',200]];
+const BPROG={ocean:['ocean',5],ocean20:['ocean',20],pond:['pond',3],ob10:['obs',10],r10:['rounds',10],r50:['rounds',50],r100:['rounds',100],w5:['wins',5],w20:['wins',20],w50:['wins',50],w100:['wins',100],bird5:['birdies',5],bird25:['birdies',25],bird50:['birdies',50],eagle3:['eagles',3],hio3:['hio',3],chip3:['chipins',3],chip10:['chipins',10],bsave10:['bsaves',10],perf10:['perfects',10],perf50:['perfects',50],perf200:['perfects',200],perf500:['perfects',500],daily10:['dailydone',10],daily50:['dailydone',50],emo20:['emo',20]};
 function badge(id){if(SV.badges[id])return;const b=BADGES.find(x=>x[0]===id);if(!b)return;SV.badges[id]=Date.now();persist();addCoins(b[3]);toast('★',`업적 달성 · ${b[1]}`,`${b[2]} · 보상 ${b[3]}귤`)}
 function stat(k,n=1){SV.stats[k]=(SV.stats[k]||0)+n;dailyAdd(k,n);persist();return SV.stats[k]}
 const TQ=[];function toast(icon,title,body){TQ.push([icon,title,body]);pumpToast()}
@@ -2288,13 +2325,13 @@ const STAGES=['1회전','준결승','결승'],TPRIZE=[1000,2500,7500];
 const tPrize=i=>Math.round(TPRIZE[i]*G.len/9/10)*10;
 function startTour(){G.mode='tour';G.tour={stage:0,len:G.len,prize:0,holeCoins:0};G.opp=TOUR_OPP[0];G.honor=0;newRound()}
 function countback(){for(let i=G.len-1;i>=0;i--){const a=PL[0].scores[i],b=PL[1].scores[i];if(a!==b)return a<b}return true}
-function roundGrowth(won,a){{const n=(SV.stats.rounds||0)+1,w=(SV.stats.wins||0)+(won?1:0);if(n>=10)badge('r10');if(n>=50)badge('r50');if(w>=5)badge('w5');if(w>=20)badge('w20');if(w>=50)badge('w50');
-   if(won&&G.diff===3)badge('prowin');if(G.len===9&&PL[0].scores.slice(0,9).every((v,i)=>v!=null&&v<=HOLES[i].par))badge('nobogey');
+function roundGrowth(won,a){{const n=(SV.stats.rounds||0)+1,w=(SV.stats.wins||0)+(won?1:0);if(n>=10)badge('r10');if(n>=50)badge('r50');if(w>=5)badge('w5');if(w>=20)badge('w20');if(w>=50)badge('w50');if(n>=100)badge('r100');if(w>=100)badge('w100');
+   if(won&&G.diff===3)badge('prowin');if(G.len>=9&&PL[0].scores.slice(0,G.len).every((v,i)=>v!=null&&v<=HOLES[i].par)){badge('nobogey');if(G.len>=18)badge('nobogey18')}
    if(won&&PL[0].scores.slice(0,G.len).every((v,i)=>v!=null&&v<=(PL[1].scores[i]??99)))badge('sweep');
-   const mx=NPCS.filter((_,i)=>affLv(i)>=4).length;if(mx>=5)badge('friend5')}if(won){if(G.mode==='match'&&G.opp===SV.unlockOpp&&SV.unlockOpp<17){SV.unlockOpp++;persist();if(SV.unlockOpp===13)setTimeout(()=>toast('🌊','2막이 열렸어요','제주의 섬을 지키는 새 상대 5명이 기다려요. 2막 상대는 이겨야만 친밀도가 올라 전용 골프채를 받을 수 있어요.'),400);if(SV.unlockOpp>=2)badge('opp3');if(SV.unlockOpp>=4)badge('opp5');if(SV.unlockOpp>=7)badge('opp8');if(SV.unlockOpp>=9)badge('allopp');toast('▶','새 상대가 열렸어요',`${NPCS[SV.unlockOpp].lv} · ${NPCS[SV.unlockOpp].name}에게 도전할 수 있어요.`);if(SV.unlockOpp===4)toast('🏆','제주 오픈이 열렸어요','토너먼트 모드에 도전할 수 있어요.')}
+   const mx=NPCS.filter((_,i)=>affLv(i)>=4).length;if([13,14,15,16,17].some(i=>affLv(i)>=4))badge('ch2aff');if(mx>=5)badge('friend5')}if(won){if(G.mode==='match'&&G.opp===SV.unlockOpp&&SV.unlockOpp<17){SV.unlockOpp++;persist();if(SV.unlockOpp===13)setTimeout(()=>toast('🌊','2막이 열렸어요','제주의 섬을 지키는 새 상대 5명이 기다려요. 2막 상대는 이겨야만 친밀도가 올라 전용 골프채를 받을 수 있어요.'),400);if(SV.unlockOpp>=2)badge('opp3');if(SV.unlockOpp>=4)badge('opp5');if(SV.unlockOpp>=7)badge('opp8');if(SV.unlockOpp>=9)badge('allopp');toast('▶','새 상대가 열렸어요',`${NPCS[SV.unlockOpp].lv} · ${NPCS[SV.unlockOpp].name}에게 도전할 수 있어요.`);if(SV.unlockOpp===4)toast('🏆','제주 오픈이 열렸어요','토너먼트 모드에 도전할 수 있어요.')}
     {const du=SV.diffU;if(G.diff===du[G.opp]&&du[G.opp]<4){du[G.opp]++;SV.unlockDiff=Math.max(SV.unlockDiff,du[G.opp]);persist();badge(['','d2','d3','d4','d5'][du[G.opp]]);toast('▲','새 난이도가 열렸어요',`${NPCS[G.opp].name}와(과) '${DIFFS[du[G.opp]].label}' 난이도로 대결할 수 있어요.`)}}}
   stat('rounds');if(won){stat('wins');badge('win1');if(G.opp===9)badge('boss')}
-  if(G.len===9&&a.d<0)badge('under');const k='best'+G.len;if(!SV.stats[k]||a.s<SV.stats[k]){SV.stats[k]=a.s;persist()}
+  if(G.len>=9&&a.d<0){badge('under');if(G.len>=18)badge('under18')}const k='best'+G.len;if(!SV.stats[k]||a.s<SV.stats[k]){SV.stats[k]=a.s;persist()}
   gainXP(dx(30+(won?40+20*G.opp:0)));G.affNew=G.opp>=13&&!won?[]:addAff(G.opp,1+(won?2:0));if(SV.owned.length>=20)badge('col20')}
 function paintGrowthResult(won){const L=lvInfo(),t=TALK[G.opp],n=NPCS[G.opp],al=affLv(G.opp);
   $('#ovXp').textContent=`경험치 +${G.roundXP||0} · 레벨 ${L.l} (${L.cur}/${L.need}) · ${n.name} 친밀도 ${'♥'.repeat(al)}${'♡'.repeat(4-al)}${G.opp>=13?(won?' · 승리로 친밀도 +3':' · 2막 상대는 이겨야 친밀도가 올라요'):''}`;
@@ -2347,7 +2384,7 @@ function renderAll(){
   $('#sLie').textContent=LIE[G.lie];
   const wa=G.wind.a*180/Math.PI;
   $('#sWind').innerHTML=`<i class="arr" style="transform:rotate(${wa.toFixed(0)}deg)">↑</i>${G.wind.s.toFixed(1)}m/s`;
-  $('#sStroke').textContent=`${strokesOf(0)} : ${strokesOf(1)}`;$('#sScore').textContent=`${fmtPar(totalVsPar(0).d)} : ${fmtPar(totalVsPar(1).d)}`;
+  $('#sStroke').textContent=PL.map((_,i)=>strokesOf(i)).join(' : ');$('#sScore').textContent=PL.map((_,i)=>fmtPar(totalVsPar(i).d)).join(' : ');
   const dh=Math.round(PIN.z-hAt(G.ball.x,G.ball.y)),pl=Math.round(playsLike()),reach=clubD(G.club)*lieMul(G.lie,G.club);
   const ug=G.club===PT?(()=>{const g=gradAt((G.ball.x+PIN.x)/2,(G.ball.y+PIN.y)/2),f=rot(G.aim);return clamp(1+SLOPEA*(g.x*f.x+g.y*f.y)/SURF.GREEN.mu,.35,2.2)})():1;
   const rp=G.club===PT?Math.round(clamp((rem+.4)*ug/30,0,1.1)*100):G.layD?Math.round(clamp(G.layD/(reach*(1-CLUBS[G.club].roll*.6)),.3,1)*100):Math.round(clamp(pl/(reach*(H.isl&&dist(G.ball,PIN)<H.isl.R+230?1-CLUBS[G.club].roll*.6:1)),0,1)*100);G.recPow=rp;
@@ -2481,7 +2518,7 @@ function renderProf(){const L=lvInfo(),f=freeSP();
   else if(pTab==='npc'){h='<div class="npcl">'+NPCS.map((n,i)=>{const al=affLv(i),nx=affT(i)[al+1];return`<div class="npc"><span class="av" style="background:${n.col}">${n.name[0]}</span><b>${n.name}<span>${n.lv}</span></b>
       <div class="hearts">${[1,2,3,4].map(k=>`<span class="${k<=al?'':'off'}">♥</span>`).join('')}<small style="color:var(--muted);font-size:11px;margin-left:6px">${al>=4?'MAX':`다음 단계까지 ${nx-SV.aff[i]}점`}${i>=13?' · 이겨야만 올라요':''}</small></div>
       <ul>${[1,2,3,4].map(l=>l<=al?`<li>${STORY[i][l]}</li>`:`<li class="lock">${giftTxt(i,l)?`전용 선물 「${giftTxt(i,l)}」`:l===2?`${AFF_COIN[i]}귤 선물`:'이야기가 잠겨 있어요'}</li>`).join('')}</ul></div>`}).join('')+'</div><p class="note">대결을 마치면 친밀도 +1, 이기면 +3이에요. 11단계 이상 상대는 단계마다 필요한 점수가 2배예요. <b>2막 상대(14~18단계)는 이겨야만 친밀도가 올라요</b>(승리 +3, 지거나 비기면 0).</p>'}
-  else if(pTab==='badge'){const got=BADGES.filter(b=>SV.badges[b[0]]).length;h=`<p class="note">${got}/${BADGES.length}개 달성</p><div class="badges">`+BADGES.map(b=>`<div class="bdg${SV.badges[b[0]]?'':' lock'}"><i>${SV.badges[b[0]]?'★':'?'}</i><b>${b[1]}</b><small>${b[2]}<br>${b[3]}귤</small></div>`).join('')+'</div>'}
+  else if(pTab==='badge'){const got=BADGES.filter(b=>SV.badges[b[0]]).length;h=`<p class="note">${got}/${BADGES.length}개 달성</p><div class="badges">`+BADGES.map(b=>`<div class="bdg${SV.badges[b[0]]?'':' lock'}"><i>${SV.badges[b[0]]?'★':'?'}</i><b>${b[1]}</b><small>${b[2]}<br>${!SV.badges[b[0]]&&BPROG[b[0]]?`진행 ${Math.min(SV.stats[BPROG[b[0]][0]]||0,BPROG[b[0]][1])}/${BPROG[b[0]][1]} · `:''}${b[3]}귤</small></div>`).join('')+'</div>'}
   else if(pTab==='bk'){h=`<div class="bk"><h5>내 데이터 내보내기</h5><p class="note">아래 코드를 복사해서 메모장이나 카톡 나에게 보내기에 보관하세요. 귤, 아이템, 레벨, 스킬, 친밀도, 업적, 기록이 모두 들어 있어요.</p>
     <textarea id="bkOut" readonly>${exportCode()}</textarea><div class="row2"><button type="button" id="bkCopy">코드 복사</button></div>
     <h5>코드로 불러오기</h5><p class="note">다른 기기에서 복사한 코드를 붙여 넣으세요. 지금 이 기기의 데이터는 코드 내용으로 바뀌어요.</p>
@@ -2574,9 +2611,7 @@ function loop(now){
          const fd=q.life>0?Math.min(1,(q.max-q.life)/.5,q.life/.5)*.9:0,ca=F.geo.attributes.color.array;ca[i*3]=ca[i*3+1]=ca[i*3+2]=fd;
          a[i*3]=q.x;a[i*3+1]=hAt(q.x,q.y)+.09;a[i*3+2]=-q.y}F.geo.attributes.position.needsUpdate=true;F.geo.attributes.color.needsUpdate=true}}}
     const v=G.vis;ball.position.set(v.x,v.z+BR,-v.y);ball.visible=!G.hideBall&&!G.holedIn;
-    {const o=PL[1-G.cur].h,show=o&&!o.done&&G.phase!=='intro'&&G.phase!=='replay'&&dist(o.ball,G.ball)>1.2,inCup=o&&o.done&&o.inCup;ball2.visible=!!(show||inCup);mark2.visible=!!show;cupMode(ball2,!!inCup);
-     if(inCup)ball2.position.set(PIN.x+.12,PIN.z-CUP_D+.03+BR,-PIN.y+.05);
-     if(show){const z=hAt(o.ball.x,o.ball.y);ball2.position.set(o.ball.x,z+BR,-o.ball.y);mark2.position.set(o.ball.x,z+3.4+Math.sin(t*3)*.3,-o.ball.y);mark2.rotation.y=t}}
+    netOtherBalls(t);
     const put=G.club===PT,back=put?.55:2.5,fol=put?.5:2.3;let tgt=0,snap=true;
     if(G.phase==='power'||G.phase==='acc'||G.phase==='npc')tgt=-back*G.power/1.1;
     else if(G.phase==='down'){const u=clamp((now-G.downT)/G.downDur,0,1);tgt=G.top*(1-u*u)}
@@ -2603,11 +2638,12 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 if(window.THREE)initGL();else $('#view').insertAdjacentHTML('beforeend','<div class="nogl">3D 엔진을 불러오지 못했어요. 새로고침해 주세요.</div>');
-/* ---------- friend match over Firebase Realtime Database (REST + streaming) ---------- */
-const NET_DB='https://jeju-ocean-golf-default-rtdb.asia-southeast1.firebasedatabase.app',NET_STAKE=1000,NET_WAIT=300000;
+/* ---------- friend match (2-4 players) over Firebase Realtime Database (REST + streaming) ---------- */
+const NET_DB='https://jeju-ocean-golf-default-rtdb.asia-southeast1.firebasedatabase.app',NET_STAKE=1000,NET_WAIT=60000,NET_EMO=['👍','👏','😂','😮','😭','🔥','⛳','🍊'],NET_COL=['#ffffff','#ffd27a','#7fe0ff','#ff9fc4'];
 const netApi=(p,method,body)=>fetch(`${NET_DB}/rooms/${p}.json`,{method:method||'GET',body:body===undefined?undefined:JSON.stringify(body)}).then(r=>{if(!r.ok)throw new Error('net');return r.json()});
 const netClean=s=>String(s||'').replace(/[<>&"'`]/g,'').trim().slice(0,8);
 const netPad=n=>String(n).padStart(4,'0');
+const netRid=()=>Array.from(crypto.getRandomValues(new Uint8Array(5)),x=>x.toString(16).padStart(2,'0')).join('');
 function netSet(root,path,val,merge){const k=path.split('/').filter(Boolean);if(!k.length){if(merge)return Object.assign(root||{},val);return val}root=root||{};let o=root;for(let i=0;i<k.length-1;i++){if(typeof o[k[i]]!=='object'||!o[k[i]])o[k[i]]={};o=o[k[i]]}const l=k[k.length-1];if(merge)o[l]=Object.assign(o[l]||{},val);else if(val===null)delete o[l];else o[l]=val;return root}
 {const typing=e=>e.target&&e.target.closest&&e.target.closest('input,textarea');let lastEnd=0;
  ['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
@@ -2622,46 +2658,82 @@ function netLook(){return JSON.parse(JSON.stringify(equipItems()))}
 function netName(){const n=netClean($('#pvpName').value);if(!n){netStatus('닉네임을 입력해 주세요.',true);return null}try{localStorage.setItem('jejuGolfNick',n)}catch(e){}return n}
 function netCheckCoins(){if(SV.coins<NET_STAKE){netStatus(`귤이 부족해요. ${NET_STAKE.toLocaleString()}귤이 있어야 대결할 수 있어요.`,true);return false}return true}
 const NET_FAIL='서버에 연결하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.'+(location.hostname.endsWith('github.io')?'':' 지금 화면에서는 외부 서버 연결이 막혀 있어요. lc90me.github.io/jeju-ocean-golf 에서 이용해 주세요.');
+let netMax=2;
 async function netMake(){const n=netName();if(!n||!netCheckCoins())return;netStatus('방을 만들고 있어요...');
   try{let code='';for(let i=0;i<6;i++){const c=String(1000+Math.floor(Math.random()*9000)),ex=await netApi(c);if(!ex||Date.now()-(ex.t||0)>7200000){code=c;break}}if(!code)throw new Error('busy');
-   await netApi(code,'PUT',{t:Date.now(),state:'wait',host:{n,look:netLook()},course:G.opp,len:G.len,diff:G.diff,seed:Math.floor(Math.random()*1e9)});
-   G.net={code,role:0,hostIdx:0,sent:0,next:0,room:null,started:false,done:false};netListen(G.net);netStatus(`방 코드 ${code} · 친구에게 코드를 보내 주세요. 기다리는 중이에요.`)}catch(e){netStatus(NET_FAIL,true)}}
+   const id='h'+netRid();await netApi(code,'PUT',{t:Date.now(),state:'wait',max:netMax,host:id,pl:{[id]:{n,look:netLook(),t:Date.now()}},course:G.opp,len:G.len,diff:G.diff,seed:Math.floor(Math.random()*1e9)});
+   G.net={code,id,host:true,sent:0,next:{},room:null,started:false,done:false,lastC:''};netListen(G.net);netLobby(true);netStatus(`친구에게 방 코드를 보내 주세요. ${netMax}명이 모이면 자동으로 시작하고, 2명 이상이면 바로 시작할 수도 있어요.`)}catch(e){netStatus(NET_FAIL,true)}}
 async function netJoin(){const n=netName();if(!n||!netCheckCoins())return;const code=$('#pvpCode').value.replace(/\D/g,'');if(code.length!==4){netStatus('4자리 코드를 입력해 주세요.',true);return}netStatus('방을 찾고 있어요...');
-  try{const r=await netApi(code);if(!r||r.state!=='wait'||r.guest){netStatus('들어갈 수 있는 방이 없어요. 코드를 확인해 주세요.',true);return}
-   await netApi(code,'PATCH',{guest:{n,look:netLook()}});G.net={code,role:1,hostIdx:1,sent:0,next:0,room:null,started:false,done:false};netListen(G.net);netStatus('입장했어요. 곧 대결이 시작돼요.')}catch(e){netStatus(NET_FAIL,true)}}
+  try{const r=await netApi(code);if(!r||r.state!=='wait'||!r.pl){netStatus('들어갈 수 있는 방이 없어요. 코드를 확인해 주세요.',true);return}if(Object.keys(r.pl).length>=(r.max||2)){netStatus('방이 꽉 찼어요.',true);return}
+   const id='g'+netRid();await netApi(`${code}/pl/${id}`,'PUT',{n,look:netLook(),t:Date.now()});G.net={code,id,host:false,sent:0,next:{},room:null,started:false,done:false,lastC:''};netListen(G.net);netLobby(true);netStatus('입장했어요. 방장이 시작하면 대결이 시작돼요.')}catch(e){netStatus(NET_FAIL,true)}}
+function netPeople(r){return Object.entries((r&&r.pl)||{}).sort((a,b)=>(a[1].t||0)-(b[1].t||0))}
+function netLobby(on){$('#pvpForm').hidden=on;$('#pvpLobby').hidden=!on;if(on)netPaintLobby()}
+function netPaintLobby(){const N=G.net;if(!N)return;const r=N.room||{},P=netPeople(r),mx=r.max||netMax;$('#pvpCodeBig').textContent=N.code;$('#pvpCount').textContent=`${P.length}/${mx}명`;
+  $('#pvpPeople').innerHTML=P.map(([id,p],i)=>`<li><i style="background:${NET_COL[i]||'#fff'}"></i><b>${netClean(p.n)}</b>${id===r.host?'<em>방장</em>':''}${id===N.id?'<em class="me">나</em>':''}</li>`).join('')+Array.from({length:Math.max(0,mx-P.length)},()=>'<li class="empty"><i></i><b>기다리는 중</b></li>').join('');
+  const sb=$('#pvpStart');sb.hidden=!N.host;sb.disabled=P.length<2;sb.textContent=P.length<2?'친구를 기다리고 있어요':`${P.length}명으로 시작하기`}
 function netOnRoom(){const N=G.net;if(!N||N.done)return;const r=N.room;
-  if(!r||!r.state){if(N.started)netEnd('gone');return}
-  const hb=r['hb'+(1-N.role)];if(hb!==N.oppHb){N.oppHb=hb;N.lastSeen=Date.now()}
-  if(!N.started){if(N.role===0&&r.guest&&r.state==='wait')netApi(N.code,'PATCH',{state:'play'}).catch(()=>netStatus(NET_FAIL,true));if(r.state==='play'&&r.host&&r.guest)netBegin();return}
-  if(r['left'+(1-N.role)]){netEnd('oppleft');return}netPump()}
+  if(!r||!r.state){if(N.started)netEnd('gone');else{netLobby(false);G.net=null;netStatus('방이 닫혔어요.',true)}return}
+  netShowChat(r);
+  if(!N.started){if(!r.pl||!r.pl[N.id]){netLobby(false);G.net=null;netStatus('방에서 나왔어요.',true);return}netPaintLobby();
+    if(N.host&&r.state==='wait'&&netPeople(r).length>=(r.max||2))netStartRoom();
+    if(r.state==='play'&&r.order){if(!r.order.includes(N.id)){netLobby(false);netCancel();netStatus('이미 시작된 방이에요.',true);return}netBegin()}return}
+  const hb=r.hb||{};N.order.forEach((_,st)=>{if(st===N.seat)return;if(hb[st]!==N.seen[st]){N.seen[st]=hb[st];N.seenAt[st]=Date.now()}});
+  const left=r.left||{},alive=N.order.map((_,st)=>st).filter(st=>!left[st]);if(alive.length===1&&alive[0]===N.seat){netEnd('oppleft');return}
+  netPump()}
+function netStartRoom(){const N=G.net,r=N.room;if(!N||!N.host||!r||r.state!=='wait')return;const order=netPeople(r).map(e=>e[0]).slice(0,r.max||4);if(order.length<2)return;netApi(N.code,'PATCH',{state:'play',order}).catch(()=>netStatus(NET_FAIL,true))}
+/* emoji chat */
+function netSendEmo(e){const N=G.net;if(!N)return;const now=Date.now();if(now-(N.lastSent||0)<1200)return;N.lastSent=now;if(stat('emo')>=20)badge('emo20');netApi(`${N.code}/c/${now}_${N.id}`,'PUT',{id:N.id,e}).catch(()=>{})}
+function netShowChat(r){const N=G.net,c=r.c||{},ks=Object.keys(c).sort();for(const k of ks){if(k<=N.lastC)continue;N.lastC=k;const m=c[k];if(!m||!NET_EMO.includes(m.e))continue;if(Date.now()-(+k.split('_')[0])>20000)continue;const p=r.pl&&r.pl[m.id],nm=m.id===N.id?'나':netClean(p&&p.n)||'친구',ix=netPeople(r).findIndex(e=>e[0]===m.id);
+  const f=$('#emoFeed'),d=document.createElement('div');d.className='emo';d.innerHTML=`<b style="color:${NET_COL[ix]||'#fff'}">${nm}</b><span>${m.e}</span>`;f.appendChild(d);while(f.children.length>4)f.firstChild.remove();setTimeout(()=>d.remove(),3600)}}
+/* nickname tag above the golfer */
 let netTagS=null;const netTagT={};
-function netTag(w){if(!R3||!player)return;if(!G.net||!G.net.started){if(netTagS)netTagS.visible=false;return}const t=netClean(w===0?G.net.myName:PL[1].name)||'친구';if(!netTagS){netTagS=new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,depthTest:false,depthWrite:false,sizeAttenuation:false,toneMapped:false,fog:false}));netTagS.position.y=4.15;netTagS.renderOrder=30;netTagS.scale.set(.15,.0375,1);player.add(netTagS)}
-  if(!netTagT[t]){const cv=document.createElement('canvas');cv.width=320;cv.height=80;const c=cv.getContext('2d');c.font='700 40px "IBM Plex Sans KR",system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';const wd=Math.min(304,c.measureText(t).width+44);c.fillStyle='rgba(10,32,34,.72)';c.beginPath();c.roundRect?c.roundRect(160-wd/2,8,wd,64,24):c.rect(160-wd/2,8,wd,64);c.fill();c.fillStyle=w===0?'#ffffff':'#ffd27a';c.fillText(t,160,42,280);const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;netTagT[t]=tx}
-  netTagS.material.map=netTagT[t];netTagS.material.needsUpdate=true;netTagS.visible=true}
-function netBegin(){const N=G.net,r=N.room,op=N.role?r.host:r.guest;N.started=true;N.myName=netClean((N.role?r.guest:r.host).n);SV.coins-=NET_STAKE;persist();updateCoinUI();N.look=op.look||null;N.seed=r.seed;G.mode='match';G.tour=null;G.opp=r.course;G.len=r.len;G.diff=r.diff||0;
-  HOLES=curC(G.opp);G.started=true;G.roundCoins=0;G.roundXP=0;PL.forEach(p=>p.scores=[]);PL[1].name=netClean(op.n)||'친구';G.honor=N.role===0?0:1;
-  $('#pvp').hidden=true;$('#start').hidden=true;$('#ov').hidden=true;$('#quitBar p').textContent=`대결을 포기하면 걸어 둔 ${NET_STAKE.toLocaleString()}귤을 잃고 상대가 승리해요.`;
-  N.lastSeen=N.tick=Date.now();N.timer=setInterval(()=>{const now=Date.now();if(now-N.tick>40000)N.lastSeen=now;N.tick=now;netApi(N.code,'PATCH',{['hb'+N.role]:now}).catch(()=>{});if(now-N.lastSeen>NET_WAIT)netEnd('oppleft')},20000);
-  toast('⛳','친구 대결 시작',`vs ${PL[1].name} · ${NET_STAKE.toLocaleString()}귤을 걸었어요.`);startHole(0)}
+function netTag(w){if(!R3||!player)return;if(!G.net||!G.net.started){if(netTagS)netTagS.visible=false;return}const t=netClean(w===0?G.net.myName:PL[w]&&PL[w].name)||'친구',k=t+w;if(!netTagS){netTagS=new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,depthTest:false,depthWrite:false,sizeAttenuation:false,toneMapped:false,fog:false}));netTagS.position.y=4.15;netTagS.renderOrder=30;netTagS.scale.set(.15,.0375,1);player.add(netTagS)}
+  if(!netTagT[k]){const cv=document.createElement('canvas');cv.width=320;cv.height=80;const c=cv.getContext('2d');c.font='700 40px "IBM Plex Sans KR",system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';const wd=Math.min(304,c.measureText(t).width+44);c.fillStyle='rgba(10,32,34,.72)';c.beginPath();c.roundRect?c.roundRect(160-wd/2,8,wd,64,24):c.rect(160-wd/2,8,wd,64);c.fill();c.fillStyle=pcol(w);c.fillText(t,160,42,280);const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;netTagT[k]=tx}
+  netTagS.material.map=netTagT[k];netTagS.material.needsUpdate=true;netTagS.visible=true}
+/* start: seats follow join order; PL[0] is always me, the rest follow seat order */
+function netBegin(){const N=G.net,r=N.room;N.started=true;N.order=r.order;N.n=r.order.length;N.seat=r.order.indexOf(N.id);N.seen={};N.seenAt={};N.myName=netClean(r.pl[N.id].n);SV.coins-=NET_STAKE;persist();updateCoinUI();N.seed=r.seed;
+  G.mode='match';G.tour=null;G.opp=r.course;G.len=r.len;G.diff=r.diff||0;HOLES=curC(G.opp);G.started=true;G.roundCoins=0;G.roundXP=0;
+  PL.splice(0);PL.push({name:'나',npc:false,scores:[],h:null,seat:N.seat});N.order.forEach((id,st)=>{if(st!==N.seat){const p=r.pl[id]||{};PL.push({name:netClean(p.n)||'친구',npc:true,scores:[],h:null,seat:st,look:p.look||null})}});
+  N.plOf={};PL.forEach((p,i)=>N.plOf[p.seat]=i);G.honor=N.plOf[0];
+  $('#pvp').hidden=true;$('#start').hidden=true;$('#ov').hidden=true;$('#emoBtn').hidden=false;$('#quitBar p').textContent=`대결을 포기하면 걸어 둔 ${NET_STAKE.toLocaleString()}귤을 잃어요. 남은 사람끼리 계속 쳐요.`;
+  N.tick=Date.now();N.order.forEach((_,st)=>N.seenAt[st]=Date.now());
+  N.timer=setInterval(()=>{const now=Date.now();if(now-N.tick>25000)N.order.forEach((_,st)=>N.seenAt[st]=now);N.tick=now;netApi(`${N.code}/hb/${N.seat}`,'PUT',now).catch(()=>{});const left=(N.room&&N.room.left)||{};N.order.forEach((_,st)=>{if(st!==N.seat&&!left[st]&&now-N.seenAt[st]>NET_WAIT)netApi(`${N.code}/left/${st}`,'PUT',true).catch(()=>{})});const cp=PL[G.cur];if(G.phase==='remote'&&cp&&cp.npc&&!left[cp.seat]){const idle=now-N.seenAt[cp.seat];if(idle>20000)setMsg(`${cp.name} 님 응답이 없어요 · ${Math.max(0,Math.ceil((NET_WAIT-idle)/1000))}초 뒤 기권 처리`)}},10000);
+  badge('pvp1');toast('⛳','친구 대결 시작',`${N.n}명 대결 · ${NET_STAKE.toLocaleString()}귤씩 걸었어요. 1등이 ${(NET_STAKE*N.n).toLocaleString()}귤을 가져가요.`);startHole(0)}
 function netSendShot(plan){const N=G.net,segs=[];for(const s of plan.segs){if(s.cup)continue;const n=clamp(Math.ceil(s.dur/45),2,70),p=[];for(let i=0;i<=n;i++){const q=s.at(i/n);p.push([+q.x.toFixed(2),+q.y.toFixed(2),+q.z.toFixed(2)])}segs.push({d:Math.round(s.dur),p})}
-  const h=PL[1].h,m={h:G.hole,club:G.club,shot:G.shot||'n',aim:G.aim,power:G.power,acc:G.acc,end:plan.end,pen:plan.pen||'',holed:!!plan.holed,carry:plan.carry||0,segs,snap:{s:G.strokes,ball:G.ball,lie:G.lie,ob:h.ball,ol:h.lie,os:h.strokes,wind:G.wind}};
-  const key=`${N.role}_${netPad(N.sent++)}`;const send=k=>netApi(`${N.code}/s/${key}`,'PUT',m).catch(()=>{if(k>0)setTimeout(()=>send(k-1),1500);else toast('!','연결이 불안정해요','상대에게 샷을 보내지 못했어요.')});send(4)}
+  const all={};PL.forEach((p,i)=>{if(i!==G.cur&&p.h)all[p.seat]={b:p.h.ball,l:p.h.lie,s:p.h.strokes}});
+  const m={h:G.hole,club:G.club,shot:G.shot||'n',aim:G.aim,power:G.power,acc:G.acc,end:plan.end,pen:plan.pen||'',holed:!!plan.holed,carry:plan.carry||0,segs,snap:{s:G.strokes,ball:G.ball,lie:G.lie,wind:G.wind,all}};
+  const key=`${N.seat}_${netPad(N.sent++)}`;const send=k=>netApi(`${N.code}/s/${key}`,'PUT',m).catch(()=>{if(k>0)setTimeout(()=>send(k-1),1500);else toast('!','연결이 불안정해요','친구들에게 샷을 보내지 못했어요.')});send(4)}
 function netPlan(m){const segs=m.segs.map(s=>{const P=s.p,n=P.length-1;return{dur:s.d,at:u=>{const f=clamp(u,0,1)*n,i=Math.min(n-1,Math.floor(f)),t=f-i,a=P[i],b=P[i+1];return{x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t,z:a[2]+(b[2]-a[2])*t}}}});if(m.holed)dropSeg(segs);return{segs,end:m.end,pen:m.pen||undefined,holed:m.holed,carry:m.carry}}
-function netPump(){const N=G.net;if(!N||!N.started||N.done||(G.phase!=='remote'&&G.phase!=='aim'))return;const m=N.room&&N.room.s&&N.room.s[`${1-N.role}_${netPad(N.next)}`];if(!m||m.h!==G.hole)return;N.next++;
-  if(G.cur!==1)loadCur(1);const q=m.snap,me=PL[0].h;if(q.ob){me.ball=q.ob;me.lie=q.ol;me.strokes=q.os}G.ball=q.ball;G.lie=q.lie;G.strokes=q.s;G.vis={...G.ball,z:hAt(G.ball.x,G.ball.y)};G.wind=q.wind;G.club=m.club;G.shot=m.shot;G.aim=m.aim;G.power=m.power;G.acc=m.acc;N.plan=netPlan(m);
+function netPump(){const N=G.net;if(!N||!N.started||N.done||G.phase!=='remote')return;const p=PL[G.cur];if(!p||!p.npc)return;const st=p.seat,nx=N.next[st]||0,m=N.room&&N.room.s&&N.room.s[`${st}_${netPad(nx)}`];
+  if(!m||m.h!==G.hole){if(N.room&&N.room.left&&N.room.left[st]&&!m){G.strokes=10;setMsg(`${p.name} 님이 나가서 남은 홀은 10타로 처리돼요.`);playerHoled(true)}return}N.next[st]=nx+1;
+  const q=m.snap;for(const s in q.all||{}){const i=N.plOf[s];if(i==null||i===G.cur||!PL[i].h||PL[i].h.done)continue;const a=q.all[s];Object.assign(PL[i].h,{ball:a.b,lie:a.l,strokes:a.s})}
+  G.ball=q.ball;G.lie=q.lie;G.strokes=q.s;G.vis={...G.ball,z:hAt(G.ball.x,G.ball.y)};G.wind=q.wind;G.club=m.club;G.shot=m.shot;G.aim=m.aim;G.power=m.power;G.acc=m.acc;N.plan=netPlan(m);
   G.phase='down';G.downT=performance.now();G.top=-(G.club===PT?.55:2.5)*Math.min(G.power,1.1)/1.1;G.pose=G.top;G.downDur=G.club===PT?280:200;sWhoosh();setMsg(`${who()} · 임팩트!`);renderAll()}
-function netEnd(kind){const N=G.net;if(!N||N.done)return;N.done=true;clearInterval(N.timer);if(N.es)N.es.close();const a=totalVsPar(0),b=totalVsPar(1),nm=PL[1].name;let pay=0,title,sub;
-  if(kind==='normal'){const w=a.s<b.s,t=a.s===b.s;pay=w?NET_STAKE*2:t?NET_STAKE:0;title=w?'승리!':t?'무승부':'아쉬운 패배';sub=`나 ${a.s}타 · ${nm} ${b.s}타`}
-  else if(kind==='oppleft'){pay=NET_STAKE*2;title='승리!';sub=`${nm} 님이 돌아오지 않아 몰수승으로 처리됐어요.`}
+function netEnd(kind){const N=G.net;if(!N||N.done)return;N.done=true;clearInterval(N.timer);if(N.es)N.es.close();const n=N.n||2,pot=NET_STAKE*n,tot=PL.map((p,i)=>({nm:i?p.name:'나',s:totalVsPar(i).s,i}));let pay=0,title,sub;
+  if(kind==='normal'){const best=Math.min(...tot.map(t=>t.s)),win=tot.filter(t=>t.s===best),rk=[...tot].sort((a,b)=>a.s-b.s),my=rk.findIndex(t=>t.i===0)+1;pay=win.some(t=>t.i===0)?Math.floor(pot/win.length):0;if(pay){badge('pvpwin');if(n>=4&&win.length===1)badge('pvp4')}
+    title=pay?(win.length>1?'공동 1등':'1등!'):`${my}위`;sub=rk.map((t,k)=>`${rk.findIndex(x=>x.s===t.s)+1}위 ${t.nm} ${t.s}타`).join(' · ')}
+  else if(kind==='oppleft'){pay=pot;title='승리!';sub='다른 참가자가 모두 나가서 혼자 남았어요. 판돈을 모두 가져가요.'}
   else if(kind==='gone'){pay=NET_STAKE;title='대결 취소';sub='대결 방이 사라져서 건 귤을 돌려드렸어요.'}
-  else{title='대결 포기';sub='대결을 포기해서 상대가 승리했어요.'}
-  if(kind==='forfeit')netApi(N.code,'PATCH',{['left'+N.role]:true}).catch(()=>{});
-  else if(kind==='normal'){const o=N.room&&N.room['end'+(1-N.role)];(o?netApi(N.code,'DELETE'):netApi(N.code,'PATCH',{['end'+N.role]:true})).catch(()=>{})}else netApi(N.code,'DELETE').catch(()=>{});
-  if(pay)addCoins(pay);G.net=null;netTag(0);clearRound();G.started=false;G.phase='idle';G.waitFn=null;$('#quitBar').hidden=true;$('#quitBar p').textContent='이번 라운드 점수와 라운드 보상은 사라지고 시작 화면으로 돌아가요. 지금까지 받은 귤과 경험치는 그대로 남아요.';
-  sFanfare(pay>NET_STAKE);$('#ovTitle').textContent=title;$('#ovScore').textContent=kind==='normal'?`${a.s} : ${b.s}`:'';$('#ovSub').textContent=sub;$('#ovCoin').textContent=`${pay>NET_STAKE?`${NET_STAKE*2}귤 획득`:pay?`${pay}귤 환불`:`${NET_STAKE}귤 잃음`} · 보유 ${SV.coins}귤`;$('#ovXp').textContent='';$('#ovTalk').hidden=true;$('#ovCard').innerHTML=cardHTML();$('#ovBtn').textContent='시작 화면으로';$('#ovBtn').onclick=showStart;$('#ov').hidden=false}
-function netCancel(){const N=G.net;if(!N||N.started)return;if(N.es)N.es.close();if(N.role===0)netApi(N.code,'DELETE').catch(()=>{});else netApi(`${N.code}/guest`,'DELETE').catch(()=>{});G.net=null}
-$('#pvpOpen').onclick=()=>{audioInit();try{$('#pvpName').value=localStorage.getItem('jejuGolfNick')||''}catch(e){}netStatus(`${NPCS[G.opp].name}의 코스 · ${G.len}홀로 방이 만들어져요. 코스와 길이는 시작 화면에서 고를 수 있어요.`);$('#pvp').hidden=false};
-$('#pvpClose').onclick=()=>{netCancel();$('#pvp').hidden=true};$('#pvpMake').onclick=netMake;$('#pvpJoin').onclick=netJoin;
+  else{title='대결 포기';sub='대결을 포기했어요. 남은 사람끼리 계속 쳐요.'}
+  const r=N.room||{},done=Object.keys(r.end||{}).length+Object.keys(r.left||{}).length;
+  if(kind==='forfeit')netApi(`${N.code}/left/${N.seat}`,'PUT',true).catch(()=>{});
+  else if(kind==='normal')(done+1>=n?netApi(N.code,'DELETE'):netApi(`${N.code}/end/${N.seat}`,'PUT',true)).catch(()=>{});else netApi(N.code,'DELETE').catch(()=>{});
+  if(pay)addCoins(pay);const card=cardHTML(),score=kind==='normal'?tot.map(t=>t.s).join(' : '):'';G.net=null;netTag(0);PL.splice(1);PL.push({name:NPCS[G.opp]?NPCS[G.opp].name:'',npc:true,scores:[],h:null});PL[0].seat=undefined;
+  clearRound();G.started=false;G.phase='idle';G.waitFn=null;$('#emoBtn').hidden=true;$('#emoTray').hidden=true;$('#quitBar').hidden=true;$('#quitBar p').textContent='이번 라운드 점수와 라운드 보상은 사라지고 시작 화면으로 돌아가요. 지금까지 받은 귤과 경험치는 그대로 남아요.';
+  sFanfare(pay>NET_STAKE);$('#ovTitle').textContent=title;$('#ovScore').textContent=score;$('#ovSub').textContent=sub;$('#ovCoin').textContent=`${pay>NET_STAKE?`${pay.toLocaleString()}귤 획득`:pay?`${pay.toLocaleString()}귤 돌려받음`:`${NET_STAKE.toLocaleString()}귤 잃음`} · 보유 ${SV.coins.toLocaleString()}귤`;$('#ovXp').textContent='';$('#ovTalk').hidden=true;$('#ovCard').innerHTML=card;$('#ovBtn').textContent='시작 화면으로';$('#ovBtn').onclick=showStart;$('#ov').hidden=false}
+function netCancel(){const N=G.net;if(!N||N.started)return;if(N.es)N.es.close();if(N.host)netApi(N.code,'DELETE').catch(()=>{});else netApi(`${N.code}/pl/${N.id}`,'DELETE').catch(()=>{});G.net=null}
+function netOtherBalls(t){if(!R3)return;const others=PL.map((_,i)=>i).filter(i=>i!==G.cur);if(!window._xb){window._xb=[]}while(window._xb.length<others.length-1){const b=ball2.clone();b.material=ball2.material.clone();const m=mark2.clone();m.material=mark2.material.clone();scene.add(b,m);window._xb.push([b,m])}
+  others.forEach((oi,k)=>{const[B,M]=k===0?[ball2,mark2]:window._xb[k-1],o=PL[oi].h,show=o&&!o.done&&G.phase!=='intro'&&G.phase!=='replay'&&dist(o.ball,G.ball)>1.2,inCup=o&&o.done&&o.inCup;B.visible=!!(show||inCup);M.visible=!!show;cupMode(B,!!inCup);M.material.color.set(G.net?pcol(oi):'#ffffff');
+    if(inCup)B.position.set(PIN.x+.12*(k+1),PIN.z-CUP_D+.03+BR,-PIN.y+.05);if(show){const z=hAt(o.ball.x,o.ball.y);B.position.set(o.ball.x,z+BR,-o.ball.y);M.position.set(o.ball.x,z+3.4+Math.sin(t*3+k)*.3,-o.ball.y);M.rotation.y=t}});
+  window._xb.forEach(([B,M],k)=>{if(k+1>=others.length){B.visible=false;M.visible=false}})}
+/* wiring */
+$('#pvpOpen').onclick=()=>{audioInit();try{$('#pvpName').value=localStorage.getItem('jejuGolfNick')||''}catch(e){}netLobby(!!G.net);netStatus(`${NPCS[G.opp].name}의 코스 · ${G.len}홀로 방이 만들어져요. 코스와 길이는 시작 화면에서 고를 수 있어요.`);$('#pvp').hidden=false};
+$('#pvpClose').onclick=()=>{netCancel();netLobby(false);$('#pvp').hidden=true};$('#pvpMake').onclick=netMake;$('#pvpJoin').onclick=netJoin;$('#pvpStart').onclick=netStartRoom;
+$('#pvpLeave').onclick=()=>{netCancel();netLobby(false);netStatus('방에서 나왔어요.')};
+$('#pvpMax').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;netMax=+b.dataset.m;$('#pvpMax').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))});
+['#pvpEmo','#emoTray'].forEach(s=>{$(s).innerHTML=NET_EMO.map(e=>`<button type="button" data-e="${e}">${e}</button>`).join('');$(s).addEventListener('click',e=>{const b=e.target.closest('[data-e]');if(!b)return;netSendEmo(b.dataset.e);if(s==='#emoTray')$('#emoTray').hidden=true})});
+$('#emoBtn').onclick=()=>{$('#emoTray').hidden=!$('#emoTray').hidden};
+['pointerdown','touchstart'].forEach(ev=>['#emoBtn','#emoTray'].forEach(s=>$(s).addEventListener(ev,e=>e.stopPropagation(),{passive:true})));
 
 
 {const sh=$('#sheet'),cs=$('#cardSheet'),mn=$('#menu'),set=(el,on)=>{sh.classList.remove('open');cs.classList.remove('open');mn.classList.remove('open');if(on)el.classList.add('open')};
@@ -2685,7 +2757,7 @@ var DMS=[{id:'round',t:'라운드 {n}판 끝내기',k:'rounds',n:[2,3],r:300},{i
  {id:'perf',t:'PERFECT 샷 {n}번',k:'perfects',n:[3,6],r:350},{id:'par',t:'파 이하로 {n}홀 끝내기',k:'parx',n:[4,8],r:350},{id:'chip',t:'그린 밖에서 칩인 1번',k:'chipins',n:[1],r:700},
  {id:'long',t:'드라이버 {n}y 이상 날리기',k:'long',n:[230,250],r:400,max:1},{id:'ev',t:'감귤 축제 라운드 {n}판',k:'evround',n:[1,2],r:450,ev:1}];
 function dailyState(){const d=v20Day();if(!SV.daily||SV.daily.d!==d){const r=rng(+d.replace(/-/g,'')),pool=DMS.filter(m=>!m.ev||evOn()),pick=[];while(pick.length<3&&pool.length){const m=pool.splice(Math.floor(r()*pool.length),1)[0];pick.push({id:m.id,k:m.k,max:m.max,r:m.r,n:m.n[Math.floor(r()*m.n.length)],t:m.t})}SV.daily={d,m:pick,p:{},got:{}}}return SV.daily}
-function dailyHit(k,v,isMax){if(typeof SV==='undefined'||!SV.stats)return;const D=dailyState();let ch=false;D.m.forEach(m=>{if(m.k!==k||D.got[m.id])return;D.p[m.id]=isMax?Math.max(D.p[m.id]||0,v):(D.p[m.id]||0)+v;ch=true;if(D.p[m.id]>=m.n){D.got[m.id]=1;setTimeout(()=>{addCoins(m.r);toast('✔','오늘의 미션 완료',`${m.t.replace('{n}',m.n)} · +${m.r}귤`)},300)}});if(ch)persist()}
+function dailyHit(k,v,isMax){if(typeof SV==='undefined'||!SV.stats)return;const D=dailyState();let ch=false;D.m.forEach(m=>{if(m.k!==k||D.got[m.id])return;D.p[m.id]=isMax?Math.max(D.p[m.id]||0,v):(D.p[m.id]||0)+v;ch=true;if(D.p[m.id]>=m.n){D.got[m.id]=1;setTimeout(()=>{addCoins(m.r);{const n=stat('dailydone');if(n>=10)badge('daily10');if(n>=50)badge('daily50')}toast('✔','오늘의 미션 완료',`${m.t.replace('{n}',m.n)} · +${m.r}귤`)},300)}});if(ch)persist()}
 function dailyAdd(k,n){dailyHit(k,n||1,false)}function dailyMax(k,v){dailyHit(k,v,true)}
 function paintV20(){const b=$('#dmBox');if(!b)return;const D=dailyState();
   let h=`<h5>오늘의 미션 <span>자정에 바뀌어요</span></h5>`+D.m.map(m=>{const p=Math.min(D.p[m.id]||0,m.n),ok=D.got[m.id];return`<div class="dm${ok?' ok':''}"><b>${m.t.replace('{n}',m.n)}</b><i><s style="width:${p/m.n*100}%"></s></i><em>${ok?'완료':m.max?`${p}y`:`${p}/${m.n}`} · ${m.r}귤</em></div>`}).join('');
@@ -2698,7 +2770,7 @@ function devId(){let v='';try{v=localStorage.getItem('jejuGolfDev')||''}catch(e)
 function myNick(){let n='';try{n=localStorage.getItem('jejuGolfNick')||''}catch(e){}return netClean(n)}
 const rankKey=len=>(G.mode==='event'?'ev':'c'+G.opp)+'_'+len;
 const rankApi=(p,m,b)=>fetch(`${NET_DB}/rank/${weekId()}/${p}.json`,{method:m||'GET',body:b===undefined?undefined:JSON.stringify(b)}).then(r=>{if(!r.ok)throw new Error('rank');return r.json()});
-async function rankSubmit(a){const n=myNick();if(!n)return;const k=rankKey(G.len),id=devId();try{const old=await rankApi(`${k}/${id}`);if(old&&old.s<=a.s)return;await rankApi(`${k}/${id}`,'PUT',{n,s:a.s,d:a.d,t:Date.now()});toast('🏆','주간 랭킹 기록',`${a.s}타 기록을 올렸어요.`)}catch(e){}}
+async function rankSubmit(a){const n=myNick();if(!n)return;const k=rankKey(G.len),id=devId();try{const old=await rankApi(`${k}/${id}`);if(old&&old.s<=a.s)return;await rankApi(`${k}/${id}`,'PUT',{n,s:a.s,d:a.d,t:Date.now()});toast('🏆','주간 랭킹 기록',`${a.s}타 기록을 올렸어요.`);badge('rank1')}catch(e){}}
 let rankLen=9;
 async function paintRank(){const box=$('#rankList'),cn=G.mode==='event'?'감귤 축제 코스':courseName(G.opp);$('#rankHead').textContent=`${cn} · ${rankLen}홀`;$('#rankTabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.l===rankLen)));box.innerHTML='<p class="note">불러오는 중이에요...</p>';
   try{const d=await rankApi(rankKey(rankLen))||{},me=devId(),L=Object.entries(d).map(([k,v])=>({...v,me:k===me})).filter(v=>typeof v.s==='number').sort((a,b)=>a.s-b.s||a.t-b.t).slice(0,30);
@@ -2714,7 +2786,7 @@ async function syncBoot(){const c=syncCfg();if(!c){window._v20Ready=1;return}try
 function syncMsg(t,err){const e=$('#syncSt');e.textContent=t;e.classList.toggle('err',!!err)}
 function paintSync(){const c=syncCfg();$('#syncOn').hidden=!c;$('#syncOff').hidden=!!c;if(c)$('#syncCode').textContent=c.code;syncMsg('')}
 async function syncCreate(){const pw=$('#syncPw1').value.trim();if(pw.length<4){syncMsg('비밀번호를 4자 이상 입력해 주세요.',true);return}syncMsg('저장하고 있어요...');
-  try{let code='';for(let i=0;i<6;i++)code+=SYNC_ABC[crypto.getRandomValues(new Uint8Array(1))[0]%SYNC_ABC.length];const k=await syncHash(code,pw);SV._t=Date.now();await syncApi(k,'PUT',{t:SV._t,sv:SV});localStorage.setItem(SYNC_KEY,JSON.stringify({code,k}));paintSync();syncMsg('저장했어요. 다른 기기에서 이 코드와 비밀번호를 입력하세요.')}catch(e){syncMsg(RANK_FAIL.replace('랭킹 ',''),true)}}
+  try{let code='';for(let i=0;i<6;i++)code+=SYNC_ABC[crypto.getRandomValues(new Uint8Array(1))[0]%SYNC_ABC.length];const k=await syncHash(code,pw);SV._t=Date.now();await syncApi(k,'PUT',{t:SV._t,sv:SV});localStorage.setItem(SYNC_KEY,JSON.stringify({code,k}));paintSync();badge('sync');syncMsg('저장했어요. 다른 기기에서 이 코드와 비밀번호를 입력하세요.')}catch(e){syncMsg(RANK_FAIL.replace('랭킹 ',''),true)}}
 async function syncLoad(){const code=$('#syncCodeIn').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,''),pw=$('#syncPw2').value.trim();if(code.length!==6||pw.length<4){syncMsg('6자리 코드와 비밀번호를 입력해 주세요.',true);return}syncMsg('불러오고 있어요...');
   try{const k=await syncHash(code,pw),d=await syncApi(k);if(!d||!d.sv){syncMsg('코드나 비밀번호가 맞지 않아요.',true);return}localStorage.setItem(SYNC_KEY,JSON.stringify({code,k}));syncApply(d.sv);paintSync();syncMsg(`불러왔어요. 귤 ${SV.coins.toLocaleString()} · 레벨 ${lvInfo().l}. 이제 두 기기가 자동으로 맞춰져요.`)}catch(e){syncMsg(RANK_FAIL.replace('랭킹 ',''),true)}}
 /* round end hook */
@@ -2723,6 +2795,7 @@ function v20After(won,a){if(G.mode==='event'){evAdd(won?3:1);dailyAdd('evround')
 let puttRib=null;
 function puttFade(now){if(!puttRib||!puttRib[1].visible)return;const u=clamp((now-(window._pgT||now)-2500)/500,0,1);puttRib[0].material.opacity=.35*(1-u);puttRib[1].material.opacity=.6*(1-u);if(u>=1)puttRib.forEach(o=>o.visible=false)}
 function puttGuide(P){if(!R3)return;if(!puttRib){const m1=new THREE.MeshBasicMaterial({color:col('#14202a'),transparent:true,opacity:.35,depthTest:false,depthWrite:false,toneMapped:false,side:THREE.DoubleSide}),m2=new THREE.MeshBasicMaterial({color:col('#ff6fdc'),transparent:true,opacity:.6,depthTest:false,depthWrite:false,toneMapped:false,side:THREE.DoubleSide});puttRib=[new THREE.Mesh(new THREE.BufferGeometry(),m1),new THREE.Mesh(new THREE.BufferGeometry(),m2)];puttRib[0].renderOrder=7;puttRib[1].renderOrder=8;puttRib.forEach(o=>{o.frustumCulled=false;scene.add(o)})}
+  if(P&&P.length>2&&typeof PIN!=='undefined'){let mi=0,md=1e9;for(let k=0;k<P.length;k++){const d=Math.hypot(P[k].x-PIN.x,P[k].z+PIN.y);if(d<md){md=d;mi=k}if(d<.3)break}if(md<1.5&&mi<P.length-1)P=P.slice(0,mi+1)}
   if(!P||P.length<2){puttRib.forEach(o=>o.visible=false);window._pgK='';return}{const k=P[0].x.toFixed(2)+P[P.length-1].x.toFixed(2)+P[P.length-1].z.toFixed(2);if(k===window._pgK)return;window._pgK=k;window._pgT=performance.now()}
   [[.11,0],[.05,1]].forEach(([w,i])=>{const pos=[],idx=[];for(let k=0;k<P.length;k++){const a=P[Math.max(0,k-1)],b=P[Math.min(P.length-1,k+1)];let dx=b.x-a.x,dz=b.z-a.z;const l=Math.hypot(dx,dz)||1;dx/=l;dz/=l;const ww=w*(k===P.length-1?.2:1),y=P[k].y-.06;pos.push(P[k].x-dz*ww,y,P[k].z+dx*ww,P[k].x+dz*ww,y,P[k].z-dx*ww);if(k)idx.push(2*k-2,2*k-1,2*k,2*k-1,2*k+1,2*k)}
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);puttRib[i].geometry.dispose();puttRib[i].geometry=g;puttRib[i].visible=true})}
