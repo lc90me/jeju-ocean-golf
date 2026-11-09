@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>제주 오션 골프 19</title>
+<title>제주 오션 골프 20</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -466,6 +466,24 @@ html,body,.app,.view{touch-action:manipulation;-webkit-text-size-adjust:100%;tex
 .view{touch-action:none}.ov .box,.sheet{touch-action:pan-y}
 *{-webkit-touch-callout:none}input{-webkit-touch-callout:default;-webkit-user-select:text;user-select:text}
 button,.gauges,.hud{-webkit-user-select:none;user-select:none}
+.moderow{grid-template-columns:1fr 1fr 1fr}
+@container (max-width:560px){.moderow{grid-template-columns:1fr}}
+@container (max-width:560px){.moderow{grid-template-columns:1fr}}
+.v20row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dmbox{display:flex;flex-direction:column;gap:7px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:11px 12px}
+.dmbox h5{margin:0;font-size:14px;display:flex;justify-content:space-between;align-items:baseline}.dmbox h5 span{font-size:11px;font-weight:500;color:var(--muted)}
+.dm{display:grid;grid-template-columns:1fr auto;gap:3px 10px;font-size:12.5px}.dm b{font-weight:600}.dm em{font-style:normal;color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.dm i{grid-column:1/-1;height:6px;border-radius:9px;background:var(--line);overflow:hidden}.dm i s{display:block;height:100%;background:var(--accent);border-radius:9px}
+.dm.ok b{color:var(--good)}.dm.ok i s{background:var(--good)}
+.evb{border-top:1px dashed var(--line);padding-top:7px;font-size:12px;line-height:1.5}.evb b{display:block;color:var(--accent);font-size:13px}.evb span{color:var(--muted)}
+.rk{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.rk li{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--surface-2);font-size:13.5px}
+.rk li span{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}.rk li em{font-style:normal;font-variant-numeric:tabular-nums}
+.rk li:nth-child(1) span{color:#d9a400}.rk li.me{outline:2px solid var(--accent)}
+.scode{display:flex;gap:8px;align-items:center}.scode b{flex:1;font-family:ui-monospace,monospace;font-size:28px;letter-spacing:.2em;background:var(--surface-2);border-radius:12px;padding:8px 12px;text-align:center}
+#sync h4{margin-top:6px}
+@container (max-width:560px){.ov .moderow{grid-template-columns:1fr 1fr!important}.ov .moderow [data-mode="event"]{grid-column:1/-1;order:3}}
+.affr{color:var(--accent);font-weight:700}
 </style>
 </head>
 <body>
@@ -482,7 +500,7 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
     <canvas id="gl"></canvas>
   <header class="top">
     <div>
-      <h1>제주 오션 골프 <em>V19</em></h1>
+      <h1>제주 오션 골프 <em>V20</em></h1>
       <p>9가지 제주 풍경 코스에서 NPC 상대와 타수 대결</p>
     </div>
     <div class="fsbar"><button id="sheetBtn" type="button" aria-label="클럽과 조준">⛳</button><button id="cardBtn" type="button" aria-label="스코어카드">▦</button><button id="menuBtn" type="button" aria-label="메뉴">☰</button></div>
@@ -578,7 +596,7 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
 
 <div class="ov" id="start" hidden>
   <div class="box">
-    <p class="brand">JEJU OCEAN GOLF</p><h3>제주 오션 골프 V19</h3>
+    <p class="brand">JEJU OCEAN GOLF</p><h3>제주 오션 골프 V20</h3>
     <div class="resume" id="resumeBox" hidden></div>
     <div class="mecard" id="meCard"></div>
     <div class="resetrow"><button type="button" class="linkbtn" id="resetBtn">처음부터 하기</button></div>
@@ -588,8 +606,11 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
       <p class="tip">남겨두고 싶다면 먼저 <button type="button" class="linkbtn" id="resetBackup">백업 코드</button>를 복사해 두세요.</p>
       <div class="row2"><button type="button" class="danger" id="resetYes">확인 · 모두 초기화</button><button type="button" class="x" id="resetNo">취소</button></div>
     </div>
+    <div class="dmbox" id="dmBox"></div>
+    <div class="v20row"><button type="button" class="x" id="rankOpen">🏆 주간 랭킹</button><button type="button" class="x" id="syncOpen">⇅ 기기 동기화</button></div>
     <div class="moderow" id="modeRow">
       <button type="button" data-mode="match" aria-pressed="true">일반 대결<small>상대를 골라 한 판 대결</small></button>
+      <button type="button" data-mode="event" aria-pressed="false">🍊 감귤 축제 이벤트<small>축제 코스 · 귤 1.5배 · 한정 보상</small></button>
       <button type="button" data-mode="tour" aria-pressed="false">제주 오픈 토너먼트<small>3연승하면 우승 · 큰 상금</small></button>
     </div>
     <button type="button" id="pvpOpen" class="x">친구와 1대1 대결 · 1,000귤 걸기</button>
@@ -609,6 +630,12 @@ button,.gauges,.hud{-webkit-user-select:none;user-select:none}
 </div>
 
 <div class="ov" id="pvp" hidden><div class="box"><div class="shop-head"><h3>친구 대결</h3><button id="pvpClose" class="x" type="button">닫기</button></div><p>서로 다른 휴대폰에서 1대1로 대결해요. 둘 다 1,000귤을 걸고, 이긴 사람이 2,000귤을 가져가요. 비기면 돌려받아요. 상대가 5분 안에 돌아오지 않으면 몰수승이에요.</p><label class="pvpf">닉네임<input id="pvpName" maxlength="8" autocomplete="off" placeholder="8글자까지"></label><button id="pvpMake" type="button">방 만들기</button><label class="pvpf">친구에게 받은 코드<input id="pvpCode" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리 숫자"></label><button id="pvpJoin" class="x" type="button">코드로 입장</button><p id="pvpSt" class="pvpst" aria-live="polite"></p></div></div>
+<div class="ov" id="rank" hidden><div class="box"><div class="shop-head"><h3>주간 랭킹</h3><button id="rankClose" class="x" type="button">닫기</button></div><p>월요일마다 새로 시작해요. 시작 화면에서 고른 코스의 최저타 기록이에요. 라운드를 끝까지 마치면 자동으로 올라가요.</p><label class="pvpf">랭킹에 표시할 닉네임<input id="rankNick" maxlength="8" autocomplete="off" placeholder="8글자까지 · 비우면 기록 안 됨"></label><b id="rankHead"></b><div class="lenrow" id="rankTabs"><button type="button" data-l="3">3홀</button><button type="button" data-l="6">6홀</button><button type="button" data-l="9">9홀</button></div><div id="rankList"></div></div></div>
+<div class="ov" id="sync" hidden><div class="box"><div class="shop-head"><h3>기기 동기화</h3><button id="syncClose" class="x" type="button">닫기</button></div><p>가입 없이 코드와 비밀번호로 여러 기기에서 같은 진행도로 플레이해요. 연결한 기기끼리는 자동으로 최신 진행도로 맞춰져요.</p>
+<div id="syncOff"><h4>이 기기 진행도를 저장하고 코드 받기</h4><label class="pvpf">비밀번호 (4자 이상, 잊으면 찾을 수 없어요)<input id="syncPw1" type="password" maxlength="20" autocomplete="new-password"></label><button id="syncMake" type="button">저장하고 코드 받기</button>
+<h4>다른 기기에서 저장한 진행도 불러오기</h4><label class="pvpf">동기화 코드<input id="syncCodeIn" maxlength="6" autocomplete="off" placeholder="6자리"></label><label class="pvpf">비밀번호<input id="syncPw2" type="password" maxlength="20" autocomplete="current-password"></label><button id="syncLoad" class="x" type="button">불러오기 · 이 기기 진행도는 덮어써져요</button></div>
+<div id="syncOn" hidden><h4>연결됨 · 동기화 코드</h4><div class="scode"><b id="syncCode"></b><button id="syncCopy" class="x" type="button">복사</button></div><p>다른 기기에서 이 코드와 비밀번호를 입력하세요. 두 기기에서 동시에 플레이하면 마지막에 저장한 쪽이 남아요.</p><button id="syncPush" class="x" type="button">지금 저장하기</button><button id="syncOffBtn" class="x" type="button">이 기기 연결 해제</button></div>
+<p id="syncSt" class="pvpst" aria-live="polite"></p></div></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="ov" id="prof" hidden>
   <div class="box profbox">
@@ -664,7 +691,8 @@ const DIFFS=[
  {label:'쉬움',note:'게이지가 느리고 바람이 약해요',pP:2.0,aP:1.6,err:7,wind:[0,2.5],rm:1,xm:1},
  {label:'보통',note:'적당한 속도와 바람',pP:1.5,aP:1.15,err:10,wind:[.5,4],rm:1.6,xm:1.3},
  {label:'어려움',note:'게이지가 빠르고 바람이 세요',pP:1.1,aP:.85,err:14,wind:[1.5,6.5],rm:2.4,xm:1.7},
- {label:'프로',note:'아주 빠른 게이지, 강풍',pP:.8,aP:.6,err:18,wind:[3,8.5],rm:3.5,xm:2.2}];
+ {label:'프로',note:'아주 빠른 게이지, 강풍',pP:.8,aP:.6,err:18,wind:[3,8.5],rm:3.5,xm:2.2},
+ {label:'지옥',note:'번개 같은 게이지, 태풍급 바람, 좁은 정확 구간, 상대도 더 강해져요',pP:.55,aP:.42,err:24,wind:[5.5,11],rm:5,xm:3}];
 const dc=k=>Math.round(k*(DIFFS[G.diff].rm||1)),dx=n=>Math.round(n*(DIFFS[G.diff].xm||1));
 const NPCS=[
  {name:'귤밭 삼춘',g:'m',hair:'#8c8a84',skirt:'',lv:'1단계',note:'공이 자주 휘는 동네 아저씨',col:'#e0702a',cap:'#2f6f3a',tag:'#ffa15c'},
@@ -679,7 +707,12 @@ const NPCS=[
  {name:'탑동 고프로',g:'m',hair:'#141216',skirt:'',lv:'10단계',note:'실수가 드문 투어 프로',col:'#1c2b45',cap:'#d8392f',tag:'#ff6b5e'},
  {name:'백록담 신선',g:'m',hair:'#e8e6df',skirt:'',lv:'11단계',note:'구름 위에서 치는 듯한 정확도',col:'#e9f5ee',cap:'#1f8a68',tag:'#8ff0cf'},
  {name:'설문대 할망',g:'f',hair:'#cfcac2',skirt:'#7a1030',lv:'12단계',note:'한라산을 만든 힘의 장타',col:'#ff3d6e',cap:'#7a1030',tag:'#ff9db6'},
- {name:'돌하르방',g:'m',hair:'#3a3a3b',skirt:'',lv:'13단계',note:'제주 골프의 끝판왕',col:'#3a3a3b',cap:'#ffcc33',tag:'#ffe066'}];
+ {name:'돌하르방',g:'m',hair:'#3a3a3b',skirt:'',lv:'13단계',note:'제주 골프의 끝판왕',col:'#3a3a3b',cap:'#ffcc33',tag:'#ffe066'},
+ {name:'우도 등대지기 영호',g:'m',hair:'#4a4a4a',skirt:'',lv:'14단계 · 2막',note:'바닷바람을 등에 업은 정교한 샷',col:'#1e6fb8',cap:'#ffffff',tag:'#8fd0ff'},
+ {name:'마라도 바람딸 해나',g:'f',hair:'#2a1a12',skirt:'#29c4d8',lv:'15단계 · 2막',note:'최남단 강풍도 계산에 넣어요',col:'#2aa9c0',cap:'#29c4d8',tag:'#9ff3ff'},
+ {name:'가파도 청보리 미소',g:'f',hair:'#5a3a1a',skirt:'#7dbb3a',lv:'16단계 · 2막',note:'보리밭처럼 흔들림 없는 퍼팅',col:'#7dbb3a',cap:'#f6e7a8',tag:'#c8f08a'},
+ {name:'추자도 선장 대철',g:'m',hair:'#222222',skirt:'',lv:'17단계 · 2막',note:'거친 파도를 뚫는 초장타',col:'#14324f',cap:'#d8392f',tag:'#7aa8ff'},
+ {name:'차귀도 용왕',g:'m',hair:'#e8f4f2',skirt:'',lv:'18단계 · 2막',note:'바다의 왕, 실수란 없어요',col:'#0f6b6b',cap:'#ffd23f',tag:'#6ff0d8'}];
 const NSTYLE=[
  {style:'훅 구질',bias:-3.2,dist:0,risk:.5,wind:.1},
  {style:'장타형',dist:11,risk:.75,wind:.15,accM:1.25},
@@ -693,9 +726,14 @@ const NSTYLE=[
  {style:'투어 공격형',dist:9,risk:.8,wind:1,short:.6},
  {style:'핀 공략 달인',dist:12,risk:.6,wind:1,short:.45,read:1,putM:.6},
  {style:'초장타 달인',dist:22,risk:.85,wind:1,short:.45,read:1,putM:.55},
- {style:'완전무결',dist:18,risk:.7,wind:1,short:.3,read:1,putM:.4}];
-(()=>{const W=[100,140,190,250,320,400,490,590,700,850,1100,1400,1800];NPCS.forEach((n,i)=>{const t=Math.min(i/9,1);Object.assign(n,{st:NSTYLE[i]});n.reward={win:W[i],hole:Math.round(W[i]/8)};
-  n.pow=+(.16-.115*t).toFixed(3);n.acc=+(.18-.125*t).toFixed(3);n.aim=+(6.5-5.1*t).toFixed(2);n.read=+(.08+.7*t).toFixed(2);n.blunder=+(.28-.24*t).toFixed(2);if(i>9){const k=i-10;n.pow=[.038,.03,.022][k];n.acc=[.046,.036,.026][k];n.aim=[1.15,.95,.75][k];n.read=[.85,.92,1][k];n.blunder=[.03,.02,.01][k]}const S=n.st;if(S.read)n.read=S.read;if(S.accM)n.acc*=S.accM;if(S.aimM)n.aim*=S.aimM;if(S.blunM)n.blunder*=S.blunM;n.note+=` · ${S.style}`})})();
+ {style:'완전무결',dist:18,risk:.7,wind:1,short:.3,read:1,putM:.4},
+ {style:'바닷바람 장인',dist:16,risk:.65,wind:1,short:.3,read:1,putM:.4},
+ {style:'강풍 지배자',dist:20,risk:.7,wind:1,short:.28,read:1,putM:.38},
+ {style:'퍼팅 여제',dist:16,risk:.6,wind:1,short:.25,read:1,putM:.25},
+ {style:'파도 장타',dist:28,risk:.85,wind:1,short:.25,read:1,putM:.35},
+ {style:'바다의 왕',dist:24,risk:.75,wind:1,short:.18,read:1,putM:.22}];
+(()=>{const W=[100,140,190,250,320,400,490,590,700,850,1100,1400,1800,2300,2900,3600,4400,5500];NPCS.forEach((n,i)=>{const t=Math.min(i/9,1);Object.assign(n,{st:NSTYLE[i]});n.reward={win:W[i],hole:Math.round(W[i]/8)};
+  n.pow=+(.16-.115*t).toFixed(3);n.acc=+(.18-.125*t).toFixed(3);n.aim=+(6.5-5.1*t).toFixed(2);n.read=+(.08+.7*t).toFixed(2);n.blunder=+(.28-.24*t).toFixed(2);if(i>9){const k=i-10;n.pow=[.038,.03,.022,.018,.015,.013,.011,.008][k];n.acc=[.046,.036,.026,.021,.018,.015,.012,.009][k];n.aim=[1.15,.95,.75,.62,.55,.48,.42,.34][k];n.read=[.85,.92,1,1,1,1,1,1][k];n.blunder=[.03,.02,.01,.008,.006,.005,.004,.002][k]}const S=n.st;if(S.read)n.read=S.read;if(S.accM)n.acc*=S.accM;if(S.aimM)n.aim*=S.aimM;if(S.blunM)n.blunder*=S.blunM;n.note+=` · ${S.style}`})})();
 const TOUR_OPP=[3,6,9];
 const SHOP={
  shirt:{label:'상의',items:[{id:'s0',name:'기본 화이트',price:0,c:'#f1f3f5'},{id:'s1',name:'한라 블루',price:80,c:'#2f6fd6',st:{acc:1}},{id:'s2',name:'귤 오렌지',price:120,c:'#f58a18',st:{acc:1}},{id:'s3',name:'현무암 차콜',price:150,c:'#3a3d42',st:{acc:2}},{id:'s4',name:'유채 옐로',price:180,c:'#f2cf2a',st:{acc:2}},{id:'s5',name:'오름 그린',price:220,c:'#4f8a3a',st:{acc:3}},{id:'s6',name:'노을 코랄',price:260,c:'#f0735a',st:{acc:3}},{id:'s7',name:'바다 민트',price:300,c:'#4fc3b8',st:{acc:4}},
@@ -740,20 +778,23 @@ GIFTS.push({slot:'hat',it:{id:'n5',name:'문씨의 땅콩밭 모자',type:'straw
  {slot:'ball',it:{id:'n9',name:'백호의 애월 노을 볼',c:'#ff9a6a',glow:1,gift:8,price:0,st:{dist:9,wind:22,dir:11}}});
 TIERN.push('신선','여신','돌하르방');TIERC.push('#38e0a8','#ff3d6e','#ffcc33');
 [[10,'신선의'],[11,'설문대'],[12,'돌하르방']].forEach(([n,pre],k)=>{const m=[1.15,1.3,1.5][k];[['driver','드라이버',4],['wood','우드',4],['iron','아이언',3],['wedge','웨지',2],['putter','퍼터',1]].forEach(([sl,nm,l],j)=>{const base=SHOP[sl].items[6].st,st={};for(const q in base)st[q]=q==='read'?base[q]:Math.round(base[q]*m);GIFTS.push({slot:sl,it:{id:`n${n}${sl[0]}${j}`,name:`${pre} ${nm}`,price:0,c:TIERC[7+k],tier:TIERN[7+k],gift:n,glv:l,st}})})});
+TIERN.push('등대','바람','청보리','선장','용왕');TIERC.push('#8fd0ff','#9ff3ff','#c8f08a','#7aa8ff','#6ff0d8');
+[[13,'영호의'],[14,'해나의'],[15,'미소의'],[16,'대철의'],[17,'용왕의']].forEach(([n,pre],k)=>{const m=[1.6,1.7,1.8,1.9,2.1][k];[['driver','드라이버',4],['wood','우드',4],['iron','아이언',3],['wedge','웨지',2],['putter','퍼터',1]].forEach(([sl,nm,l],j)=>{const base=SHOP[sl].items[6].st,st={};for(const q in base)st[q]=q==='read'?base[q]:q==='dist'?Math.min(30,Math.round(base[q]*m)):Math.round(base[q]*m);GIFTS.push({slot:sl,it:{id:`n${n}${sl[0]}${j}`,name:`${pre} ${nm}`,price:0,c:TIERC[10+k],tier:TIERN[10+k],gift:n,glv:l,st}})})});
+SHOP.ball.items.push({id:'e0',name:'축제 황금 귤 볼',price:0,evt:1,rare:'이벤트',c:'#ffb21f',glow:1,fx:'comet',st:{dist:9,wind:22,dir:11}});SHOP.hat.items.push({id:'e1',name:'감귤 축제 왕관',price:0,evt:1,rare:'이벤트',type:'tang',c:'#ff9a1f',glow:1,st:{wind:38,acc:6}});
 const giftOf=i=>GIFTS.find(g=>g.it.gift===i);const giftTxt=(i,l)=>GIFTS.filter(g=>g.it.gift===i&&(g.it.glv||4)===l).map(g=>g.it.name).join(' · ');
 GIFTS.forEach(g=>{g.it.rare='전용'});
 GIFTS.forEach(g=>SHOP[g.slot].items.push(g.it));
 const SAVE_KEY='jejuGolf3Shop';let SV={coins:1000,owned:[],equip:{},gift10k:true,gift20k:true,v19:1};
 try{const d=JSON.parse(localStorage.getItem(SAVE_KEY));if(d&&!d.v19){localStorage.removeItem(SAVE_KEY);localStorage.removeItem('jejuGolf3Round');[3,6,9].forEach(n=>localStorage.removeItem('jejuGolf3Best'+n))}else if(d&&typeof d.coins==='number')SV=Object.assign({},SV,d,{owned:Array.isArray(d.owned)?d.owned:[],equip:d.equip||{}})}catch(e){}
 SV.xp=SV.xp||0;SV.skills=SV.skills||{};SV.aff=Array.isArray(SV.aff)?SV.aff:[];
-if(SV.aff.length===5&&!SV.aff10){const o=SV.aff;SV.aff=[o[0],0,o[1],0,o[2],0,0,o[3],0,o[4]]}while(SV.aff.length<13)SV.aff.push(0);SV.aff10=true;
+if(SV.aff.length===5&&!SV.aff10){const o=SV.aff;SV.aff=[o[0],0,o[1],0,o[2],0,0,o[3],0,o[4]]}while(SV.aff.length<18)SV.aff.push(0);SV.aff10=true;
 SV.badges=SV.badges||{};SV.stats=SV.stats||{};SV.trophies=SV.trophies||{};
 if(typeof SV.unlockOpp!=='number'){let u=0;SV.aff.forEach((a,i)=>{if(a>=3)u=Math.max(u,i+1)});SV.unlockOpp=Math.min(9,u)}if(typeof SV.unlockDiff!=='number')SV.unlockDiff=0;if(!Array.isArray(SV.diffU)){SV.diffU=NPCS.map((_,k)=>k<=SV.unlockOpp?SV.unlockDiff:0)}
 if(!SV.trophies)SV.trophies={};
-function repairProgress(){let u=SV.unlockOpp||0;const B=SV.badges||{};(SV.aff||[]).forEach((a,i)=>{if(a>=3)u=Math.max(u,i+1)});(SV.diffU||[]).forEach((d,i)=>{if(d>0)u=Math.max(u,i+1)});if(B.opp3)u=Math.max(u,2);if(B.opp5)u=Math.max(u,4);if(B.opp8)u=Math.max(u,7);if(B.allopp)u=Math.max(u,9);SV.unlockOpp=Math.min(12,u);while((SV.diffU=SV.diffU||[]).length<NPCS.length)SV.diffU.push(0);SV.unlockDiff=Math.max(SV.unlockDiff||0,...SV.diffU)}
+function repairProgress(){let u=SV.unlockOpp||0;const B=SV.badges||{};(SV.aff||[]).forEach((a,i)=>{if(a>=3)u=Math.max(u,i+1)});(SV.diffU||[]).forEach((d,i)=>{if(d>0)u=Math.max(u,i+1)});if(B.opp3)u=Math.max(u,2);if(B.opp5)u=Math.max(u,4);if(B.opp8)u=Math.max(u,7);if(B.allopp)u=Math.max(u,9);SV.unlockOpp=Math.min(17,u);while((SV.diffU=SV.diffU||[]).length<NPCS.length)SV.diffU.push(0);SV.unlockDiff=Math.max(SV.unlockDiff||0,...SV.diffU)}
 repairProgress();
 let GIFTED=0;if(!SV.gift10k){SV.coins+=10000;SV.gift10k=true;GIFTED+=10000}if(!SV.gift20k){SV.coins+=20000;SV.gift20k=true;GIFTED+=20000}if(GIFTED)persist();
-function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}}
+function persist(){if(window._v20Ready)SV._t=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}if(window._v20Ready&&typeof syncPush==='function')syncPush()}
 const owns=it=>(it.price===0&&it.gift==null)||SV.owned.includes(it.id);
 function equipItems(){const o={};for(const k in SHOP){o[k]=SHOP[k].items.find(i=>i.id===SV.equip[k]&&owns(i))||SHOP[k].items[0]}return o}
 const GEAR=['shirt','pants','shoes','hat','acc','ball'];
@@ -812,10 +853,16 @@ const COURSES=[
  {name:'애월 노을 링크스',themes:['sunset','lava','sunset','oreum','lava','sunset','coast','lava','sunset'],tods:['sunset','sunset','noon'],names:['한담 해안','곽지 모래','애월 카페거리','노을 언덕','곶자왈 숲','고내포구','하귀 바다','검은 숲길','애월 노을'],w:36,bunk:3,water:.35,wind:2,lighthouse:1},
  {name:'백록담 신선 코스',themes:['oreum','forest','oreum','forest','oreum','lava','forest','oreum','oreum'],tods:['mist','morning'],names:['어리목','영실 기암','윗세오름','사제비','만세동산','선작지왓','평궤','남벽','백록담'],w:35,bunk:3,water:.4,wind:2},
  {name:'설문대 창조 코스',themes:['cliff','lava','cliff','sunset','lava','cliff','oreum','lava','cliff'],tods:['dawn','noon','sunset'],names:['치마폭','흙 한 줌','오백장군','족두리 바위','물장오리','곶자왈 뿌리','오름 조각','용암 물길','섬의 시작'],w:34,bunk:3,water:.5,wind:3,crater:1},
- {name:'돌하르방 코스',themes:['lava','cliff','sunset','lava','cliff','forest','cliff','lava','sunset'],tods:['sunset','noon','mist'],names:['성문','수문장','현무암 길','돌담 회랑','바람 길','천년 숲','하르방 절벽','돌담 끝','천년의 홀'],w:33,bunk:3,water:.6,wind:3,lighthouse:1,crater:1}];
+ {name:'돌하르방 코스',themes:['lava','cliff','sunset','lava','cliff','forest','cliff','lava','sunset'],tods:['sunset','noon','mist'],names:['성문','수문장','현무암 길','돌담 회랑','바람 길','천년 숲','하르방 절벽','돌담 끝','천년의 홀'],w:33,bunk:3,water:.6,wind:3,lighthouse:1,crater:1},
+ {name:'우도 등대 링크스',themes:['coast','canola','coast','cliff','coast','sunset','coast','canola','cliff'],tods:['morning','noon'],names:['우도봉','검멀레 해안','하우목동','서빈백사','비양도 등대','홍조단괴 해변','땅콩 돌담','쇠머리 언덕','등대 그린'],w:33,bunk:3,water:.5,wind:3,lighthouse:1},
+ {name:'마라도 최남단 코스',themes:['cliff','coast','cliff','cliff','sunset','cliff','coast','cliff','cliff'],tods:['noon','sunset'],names:['살레덕 선착장','최남단비','억새 들판','장군바위','마라 등대','해식동굴','짜장면 거리','남쪽 절벽','국토 끝 그린'],w:31,bunk:3,water:.5,wind:4,lighthouse:1},
+ {name:'가파도 청보리 코스',themes:['canola','canola','coast','canola','oreum','canola','coast','canola','sunset'],tods:['morning','noon'],names:['상동 포구','청보리 물결','보리 돌담길','소망 전망대','하동 바다','고인돌 들판','보리 바람','가파 노을','청보리 그린'],w:32,bunk:3,water:.55,wind:3},
+ {name:'추자도 파도 코스',themes:['cliff','coast','lava','cliff','coast','cliff','forest','cliff','sunset'],tods:['dawn','noon','sunset'],names:['상추자항','나바론 절벽','눈물의 십자가','대왕산','봉골레산','신양항','후포 숲길','직구도','추자 노을'],w:31,bunk:3,water:.6,wind:4,crater:1},
+ {name:'차귀도 용궁 코스',themes:['cliff','lava','sunset','cliff','lava','cliff','coast','lava','sunset'],tods:['sunset','mist','noon'],names:['자구내 포구','장군바위','용궁 입구','수월봉','검은 모래','독수리 바위','당산봉','용왕의 길','용궁 그린'],w:30,bunk:3,water:.65,wind:4,crater:1,lighthouse:1}];
+var EVC={name:'감귤 축제 코스',themes:['orchard','canola','orchard','sunset','orchard','canola','orchard','oreum','sunset'],tods:['morning','noon','sunset'],names:['축제 입구','귤 따기 체험','유채 꽃길','노을 귤밭','귤 창고 마당','꽃 터널','하귤 언덕','축제 오름','불꽃놀이 그린'],w:42,bunk:2,water:.3,wind:1};
 const courseCache={};
 function courseFor(i){if(i===9)return HOLES_BASE;if(courseCache[i])return courseCache[i];
-  const C=COURSES[i>9?i-1:i],r=rng(4242+i*977),PARS=[4,3,5,4,4,3,4,5,4],rr=(a,b)=>a+r()*(b-a),side=()=>r()<.5?-1:1;
+  const C=i===99?EVC:COURSES[i>9?i-1:i],r=rng(4242+i*977),PARS=[4,3,5,4,4,3,4,5,4],rr=(a,b)=>a+r()*(b-a),side=()=>r()<.5?-1:1;
   const holes=PARS.map((par,k)=>{const th=C.themes[k],coastal=th==='coast'||th==='cliff'||th==='sunset',ocean=coastal?(r()<.5?'L':'R'):null,away=ocean==='L'?1:ocean==='R'?-1:side();
     const L=Math.round(par===3?rr(148,182):par===4?rr(340,420):rr(488,540)),bend=par===3?0:Math.round(away*rr(8,38)),w=Math.round(clamp(C.w+(par===3?-12:0)+rr(-3,3),26,48)),gr=par===3?14:15;
     const bunkers=[];const nb=C.bunk+(par===5?1:0);for(let b=0;b<nb;b++){let q;if(b===nb-1||par===3){const sd=side();q=[Math.round(L-rr(2,10)),Math.round(sd*rr(gr+2,gr+5)),Math.round(rr(5,7))]}else q=[Math.round(L*rr(.5,.75)),Math.round(side()*(w/2+rr(1,5))),Math.round(rr(6,9))];bunkers.push(q);if(r()<.7)bunkers.push([q[0]+Math.round(rr(-9,9)),q[1]+Math.sign(q[1])*Math.round(rr(3,6)),Math.round(q[2]*.68)])}
@@ -833,7 +880,7 @@ function courseFor(i){if(i===9)return HOLES_BASE;if(courseCache[i])return course
     if(flowers.length)d.push('양옆은 유채꽃밭이에요.');if(elev>=8)d.push(`${elev}y 높은 오르막 그린이에요.`);else if(elev<=-5)d.push('시원한 내리막 홀이에요.');if(nb>=3)d.push('벙커가 많아요.');if(w<=32)d.push('페어웨이가 좁아요.');
     if(!d.length)d.push(par===5?'길게 두 번에 나눠 공략하세요.':par===3?'한 번에 그린을 노리세요.':'페어웨이를 지키면 쉬워요.');h.desc=d.slice(0,2).join(' ');return h});
   return courseCache[i]=holes}
-const courseName=i=>i===9?'제주 챔피언십 (탑동)':COURSES[i>9?i-1:i].name;
+const courseName=i=>i===99?'감귤 축제 코스':i===9?'제주 챔피언십 (탑동)':COURSES[i>9?i-1:i].name;
 const LIE={TEE:'티',FAIRWAY:'페어웨이',ROUGH:'러프',BUNKER:'벙커',BEACH:'모래사장',FLOWER:'유채꽃밭',LAVA:'용암지대',GREEN:'그린',WATER:'해저드',OCEAN:'바다',OB:'OB',PENALTY:'페널티 구역',WASTE:'웨이스트 에어리어'};
 const SEA=-3,BR=.2,CUP_R=.45,CUP_D=.9;
 
@@ -1437,7 +1484,12 @@ const NPCAMB=[
  {wv:1,sea:.45,wind:1.2,lv:0,rb:.5,hum:0,bee:0,br:0,ev:{gull:[7,14],crash:[12,20]}},
  {wv:0,sea:0,wind:.5,lv:1,rb:0,hum:0,bee:0,br:.7,ev:{drip:[2,5],cuckoo:[10,18],wood:[14,26]}},
  {wv:.9,sea:.4,wind:1.9,lv:.3,rb:1.2,hum:0,bee:0,br:0,ev:{crash:[9,16],crow:[16,28]}},
- {wv:.4,sea:.2,wind:1.4,lv:.5,rb:1,hum:0,bee:0,br:0,ev:{crow:[10,20],drip:[4,8]}}];
+ {wv:.4,sea:.2,wind:1.4,lv:.5,rb:1,hum:0,bee:0,br:0,ev:{crow:[10,20],drip:[4,8]}},
+ {wv:1,sea:.6,wind:1.1,lv:0,rb:.5,hum:0,bee:0,br:0,ev:{gull:[6,12],lark:[12,20]}},
+ {wv:1.1,sea:.7,wind:1.9,lv:.2,rb:.6,hum:0,bee:0,br:0,ev:{gull:[8,14],crash:[10,18]}},
+ {wv:.6,sea:.4,wind:1.3,lv:.7,rb:.2,hum:.1,bee:.3,br:0,ev:{lark:[5,10],bird:[8,14]}},
+ {wv:1.2,sea:.7,wind:1.4,lv:0,rb:.8,hum:0,bee:0,br:0,ev:{crash:[7,12],gull:[9,16]}},
+ {wv:1,sea:.6,wind:1.2,lv:0,rb:1,hum:0,bee:0,br:0,ev:{crash:[8,14],drip:[3,7],crow:[18,30]}}];
 const AMBP={
  coast:{wv:1,wind:.8,lv:0,rb:.4,hum:0,bee:0,ev:{gull:[7,15],bird:[9,18]}},
  sunset:{wv:.85,wind:.5,lv:0,rb:.35,hum:0,bee:0,ev:{gull:[12,24],cricket:[3,7]}},
@@ -1743,7 +1795,7 @@ function updateAim3D(){
   else for(let i=0;i<=30;i++){const t=i/30,cv=shotT().curve*len*.08*4*t*(1-t),x=b.x+d.x*len*t+d.y*cv,y=b.y+d.y*len*t-d.x*cv;pts3.push(new THREE.Vector3(x,hAt(x,y)+.12,-y))}
   aimLine.geometry.dispose();aimLine.geometry=new THREE.BufferGeometry().setFromPoints(pts3);aimLine.computeLineDistances();
   landRing.position.set(e.x,hAt(e.x,e.y)+.35,-e.y);
-  const show=G.phase!=='flight'&&G.phase!=='holed'&&G.phase!=='intro'&&G.phase!=='replay'&&G.phase!=='remote';aimLine.visible=show;landRing.visible=show&&G.club!==PT;
+  const show=G.phase!=='flight'&&G.phase!=='holed'&&G.phase!=='intro'&&G.phase!=='replay'&&G.phase!=='remote';const pg=G.club===PT&&G.lie==='GREEN';aimLine.visible=show&&!pg;puttGuide(show&&pg?pts3:null);landRing.visible=show&&G.club!==PT;
   const rx=Math.cos(G.aim),rz=Math.sin(G.aim),px=b.x-rx*1.4,py=b.y+rz*1.4;
   player.position.set(px,hAt(px,py),-py);player.rotation.y=-G.aim;
 }
@@ -1841,7 +1893,12 @@ const TIERSTY=[
  {body:'#2a1440',crown:'#c06cff',face:'#ffd6ff',accent:'#ff7ae0',shaft:'#1a0f2a',grip:'#c06cff',bands:4,em:1.8},
  {body:'#d7f5e6',crown:'#0f5c46',face:'#ffffff',accent:'#38e0a8',shaft:'#0c3a30',grip:'#d7f5e6',bands:4,em:2},
  {body:'#7a1030',crown:'#ff3d6e',face:'#ffd6e0',accent:'#ff8fb0',shaft:'#2a0a14',grip:'#ff3d6e',bands:4,em:2.2},
- {body:'#14120f',crown:'#ffcc33',face:'#fff2b8',accent:'#ffe066',shaft:'#0b0a08',grip:'#ffcc33',bands:4,em:2.6}];
+ {body:'#14120f',crown:'#ffcc33',face:'#fff2b8',accent:'#ffe066',shaft:'#0b0a08',grip:'#ffcc33',bands:4,em:2.6},
+ {body:'#e8f4ff',crown:'#1e6fb8',face:'#ffffff',accent:'#8fd0ff',shaft:'#0e2a44',grip:'#1e6fb8',bands:4,em:2.4},
+ {body:'#f2f6f8',crown:'#29c4d8',face:'#ffffff',accent:'#9ff3ff',shaft:'#0b3a42',grip:'#29c4d8',bands:4,em:2.5},
+ {body:'#7dbb3a',crown:'#f6e7a8',face:'#fffbe0',accent:'#c8f08a',shaft:'#2a4012',grip:'#f6e7a8',bands:4,em:2.5},
+ {body:'#14324f',crown:'#d8392f',face:'#e8f0ff',accent:'#7aa8ff',shaft:'#0a1726',grip:'#d8392f',bands:4,em:2.7},
+ {body:'#0f6b6b',crown:'#ffd23f',face:'#f4fffb',accent:'#6ff0d8',shaft:'#052e2e',grip:'#ffd23f',bands:4,em:3}];
 const clubCache={};
 function buildClub(type,ti){
   const P=TIERSTY[ti],g=new THREE.Group(),emis=[];
@@ -1912,7 +1969,7 @@ function saveRound(i){if(!G.started||G.net)return;try{localStorage.setItem(RKEY,
 function loadRound(){try{const r=JSON.parse(localStorage.getItem(RKEY));if(r&&typeof r.hole==='number'&&Array.isArray(r.s0))return r}catch(e){}return null}
 function clearRound(){try{localStorage.removeItem(RKEY)}catch(e){}}
 function resumeRound(){const r=loadRound();if(!r)return;G.mode=r.mode||'match';G.tour=r.tour||null;G.len=r.len||9;G.diff=r.diff||0;G.opp=r.opp||0;G.honor=r.honor||0;G.roundCoins=r.rc||0;G.roundXP=r.rx||0;
-  PL[0].scores=r.s0;PL[1].scores=r.s1;PL[1].name=NPCS[G.opp].name;G.started=true;HOLES=courseFor(G.opp);$('#start').hidden=true;$('#ov').hidden=true;startHole(r.hole)}
+  PL[0].scores=r.s0;PL[1].scores=r.s1;PL[1].name=NPCS[G.opp].name;G.started=true;HOLES=curC(G.opp);$('#start').hidden=true;$('#ov').hidden=true;startHole(r.hole)}
 function paintResume(){const r=loadRound(),box=$('#resumeBox');if(!r){box.hidden=true;return}
   const tot=(a)=>a.reduce((x,v)=>x+(v||0),0),done=r.s0.filter(v=>v!=null).length;
   box.innerHTML=`<div><b>이어하기 · ${r.hole+1}번 홀부터</b><span>${r.mode==='tour'&&r.tour?`제주 오픈 ${STAGES[r.tour.stage]} · `:''}vs ${NPCS[r.opp].name} · ${r.len}홀 · ${DIFFS[r.diff].label} · 지금까지 나 ${tot(r.s0)}타 : 상대 ${tot(r.s1)}타 (${done}홀 완료)</span></div><button type="button" id="resumeGo">이어하기</button><button type="button" class="x" id="resumeDrop">이 라운드 버리고 새로 시작</button>`;box.hidden=false;
@@ -1927,7 +1984,7 @@ function startHole(i){saveRound(i);setTimeout(()=>fitView(true),60);
   G.slope={x:-H.gt.x,y:-H.gt.y};
   const P=plants();buildObs(P);drawCourse(P);buildHole3D(P);autoSetup();
   if(R3){G.phase='intro';G.introT=performance.now()}else{G.phase='wait';G.waitT=0;G.waitFn=()=>beginTurn(G.honor,true)}
-  setMsg(`${i===0?courseName(G.opp)+' · ':''}${G.mode==='tour'&&G.tour?`제주 오픈 ${STAGES[G.tour.stage]} · `:''}${i+1}번 홀 · ${H.n} · 파${H.par} · ${H.L}y`,true);
+  setMsg(`${i===0?(G.mode==='event'?'감귤 축제 코스':courseName(G.opp))+' · ':''}${G.mode==='tour'&&G.tour?`제주 오픈 ${STAGES[G.tour.stage]} · `:''}${i+1}번 홀 · ${H.n} · 파${H.par} · ${H.L}y`,true);
   renderAll();
 }
 function endIntro(){if(G.phase!=='intro')return;beginTurn(G.honor,true)}
@@ -1947,7 +2004,7 @@ function afterShot(ms,fn){const r=finishRec();const mine=r&&!PL[r.who].npc,auto=
   if(auto)wait(900,()=>startReplay(()=>wait(300,fn),true));else wait(ms,fn)}
 function wait(ms,fn){G.phase='wait';G.waitT=performance.now()+ms;G.waitFn=fn;renderAll()}
 function planNpc(){
-  const n=NPCS[G.opp],S=n.st||{};let pw;
+  const n0=NPCS[G.opp],n=G.diff===4?{...n0,pow:n0.pow*.6,acc:n0.acc*.6,aim:n0.aim*.6,blunder:n0.blunder*.4,read:Math.min(1,n0.read+.1)}:n0,S=n0.st||{};let pw;
   if(G.club===PT){const d=dist(G.ball,PIN),a0=G.aim;let best={e:1e9,a:a0,d:d+.5};
     for(let da=-14;da<=14;da+=1)for(const dd of[d*.9+.3,d+.5,d*1.12+.6]){const a=a0+da*Math.PI/180,dr=rot(a),v0=puttV0(dd),R=groundSim(G.ball,{x:dr.x*v0,y:dr.y*v0},{cupR:.45,cupV:7.5}),e=R.holed?Math.abs(da)*.001:dist(R.end,PIN);if(e<best.e)best={e,a,d:dd}}
     G.aim=a0+(best.a-a0)*n.read;pw=clamp(best.d/30*(1+gs()*n.pow*1.6*(S.putM||1)),.04,1)}
@@ -2004,7 +2061,7 @@ function shoot(){
   setMsg(G.club===PT?`${who()} · 퍼팅! 공의 구름을 지켜보세요.`:`${who()} · ${CLUBS[G.club].name}${G.shot&&G.shot!=='n'?' '+SHOTS[G.shot].name:''} 샷! 정확도 ${accScore()}점`);
 }
 const LIEW={WASTE:.8,ROUGH:.8,FLOWER:.8,BUNKER:.65,BEACH:.65,LAVA:.65};
-const sweetW=()=>{const base=.085+(cs().forg||0)*.0016;if(G.club===PT)return base*(1+(isMe()?.1*sk('ht'):0));const w=LIEW[G.lie]||1;return base*(1-(1-w)*(1-lieRelief(G.lie)))};
+const sweetW=()=>{const base=(.085+(cs().forg||0)*.0016)*(G.diff===4?.72:1);if(G.club===PT)return base*(1+(isMe()?.1*sk('ht'):0));const w=LIEW[G.lie]||1;return base*(1-(1-w)*(1-lieRelief(G.lie)))};
 function liePenalty(){if(G.club===PT)return'';const L=G.lie,m=lieMul(L,G.club),w=LIEW[L];if(!w)return'';return`${LIE[L]} 페널티 · 비거리 -${Math.round((1-m)*100)}% · 정확 구간 -${Math.round((1-w)*100)}%`}
 function effOff(a){const off=(a==null?G.acc:a)-.5,w=sweetW(),m=Math.max(0,Math.abs(off)-w)/(.5-w)*.5;return off<0?-m:m}
 const accScore=()=>Math.round(100-Math.abs(effOff())*200);
@@ -2075,13 +2132,13 @@ function finishShot(){
   G.vis={...G.ball,z:hAt(G.ball.x,G.ball.y)};
   if(r.holed&&!r.pen){playerHoled();return}
   if(G.strokes>=10){G.strokes=10;setMsg(`${who()} · 10타에 도달해 공을 집어 들었어요.`);playerHoled(true);return}
-  if(!r.pen&&isMe()){if(G.club===0&&r.carry>(SV.stats.longest||0)){SV.stats.longest=r.carry;persist()}if(G.club===0&&r.carry>=250)badge('long250');if(G.club===0&&r.carry>=280)badge('long280');if((G.prev.lie==='BUNKER'||G.prev.lie==='BEACH')&&G.lie==='GREEN')badge('bsave')}
+  if(!r.pen&&isMe()){if(G.club===0)dailyMax('long',r.carry);if(G.club===0&&r.carry>(SV.stats.longest||0)){SV.stats.longest=r.carry;persist()}if(G.club===0&&r.carry>=250)badge('long250');if(G.club===0&&r.carry>=280)badge('long280');if((G.prev.lie==='BUNKER'||G.prev.lie==='BEACH')&&G.lie==='GREEN')badge('bsave')}
   if(!r.pen){const rem=Math.round(dist(G.ball,PIN)),cr=G.cartRelief?' · 카트도로 무벌타 구제':'';G.cartRelief=false;setMsg(G.club===PT?`${who()} · ${r.carry}y 굴렀어요. 홀까지 ${rem}y`:`${who()} · ${CLUBS[G.club].name} ${r.carry}y · ${LIE[G.lie]}${cr}. 홀까지 ${rem}y`)}
-  if(!G.net)G.wind.s=+clamp(G.wind.s+(Math.random()-.5)*.6,0,9).toFixed(1);saveCur();afterShot(1200,nextTurn);
+  if(!G.net)G.wind.s=+clamp(G.wind.s+(Math.random()-.5)*.6,0,G.diff===4?12:9).toFixed(1);saveCur();afterShot(1200,nextTurn);
 }
 function scoreName(s,par){if(s===1)return'홀인원';const d=s-par;return({'-3':'알바트로스','-2':'이글','-1':'버디','0':'파','1':'보기','2':'더블 보기','3':'트리플 보기'})[d]||(d>0?`+${d}`:`${d}`)}
 function playerHoled(picked){
-  if(!picked&&isMe()&&!G.net){const d=G.strokes-H.par,pl=G.plan,from=G.prev?G.prev.lie:'';
+  if(!picked&&isMe()&&!G.net){const d=G.strokes-H.par,pl=G.plan,from=G.prev?G.prev.lie:'';if(d<=0)dailyAdd('parx');
     if(G.strokes===1){badge('hio');stat('hio')}else if(d<=-2){badge('eagle');stat('eagles')}else if(d===-1){badge('bird');stat('birdies')}
     if(pl&&G.club!==PT&&from!=='GREEN'&&G.strokes>1){badge('chip');stat('chipins')}
     if(G.club===PT&&G.prev&&dist(G.prev,PIN)>=10)badge('lputt');
@@ -2121,7 +2178,7 @@ const brPts=b=>SKILLS.filter(k=>k.br===b).reduce((a,k)=>a+sk(k.id),0);
 function gainXP(n,why){if(n<=0)return;const before=lvInfo().l;SV.xp+=n;G.roundXP=(G.roundXP||0)+n;persist();const after=lvInfo().l;
   if(after>before){toast('LV',`레벨 ${after} 달성!`,`스킬 포인트 ${after-before}개를 얻었어요. 내 골퍼에서 스킬을 찍어 보세요.`);sFanfare(true);if(after>=5)badge('lv5');if(after>=10)badge('lv10');if(after>=20)badge('lv20');if(after>=30)badge('lv30')}updateProfBtn()}
 const AFF_T=[0,2,5,9,14];const affT=i=>i>=10?AFF_T.map(t=>t*2):AFF_T;const affLv=i=>affT(i).reduce((a,t,k)=>SV.aff[i]>=t?k:a,0);
-const AFF_COIN=[450,500,600,700,800,900,1000,1200,1400,1600,2000,2500,3000];
+const AFF_COIN=[450,500,600,700,800,900,1000,1200,1400,1600,2000,2500,3000,3500,4000,4500,5000,6000];
 const STORY=[
  ['','삼춘은 30년째 귤밭을 일궈요. 골프는 은퇴하고 배운 취미래요.','귤밭 돌담 사이로 공 줍던 옛날 이야기를 들려줬어요.','"바람 부는 날엔 낮게 쳐야 혀." 삼춘의 비법을 들었어요.','삼춘이 아끼던 장갑을 선물했어요.'],
  ['','문씨는 우도에서 땅콩 농사를 지어요. 배 타고 골프 치러 와요.','"우도 땅콩은 작아도 고소하지." 골프공도 그렇대요.','태풍에 밭이 다 쓸려 갔던 해에도 웃으며 다시 심었대요.','문씨가 땅콩밭에서 쓰던 모자를 줬어요.'],
@@ -2135,7 +2192,12 @@ const STORY=[
  ['','고프로는 탑동에서 자라 투어 프로가 됐어요.','"어릴 때 방파제에서 공 치다 많이 혼났죠." 고프로가 웃었어요.','슬럼프 때 고향 바람을 맞으며 다시 일어섰대요.','고프로가 시그니처 볼을 건넸어요.'],
  ['','신선은 백록담 구름 위에서 내려왔다는 소문이 있어요. 첫 만남에 퍼터를 건넸어요.','"공은 치는 게 아니라 보내는 것이야." 신선이 웨지를 선물했어요.','사슴과 함께 백록담을 거닐던 이야기를 들려주며 아이언을 건넸어요.','신선이 구름을 가르는 우드와 드라이버를 내줬어요.'],
  ['','할망은 치마폭에 흙을 날라 한라산을 쌓았대요. 작은 퍼터를 건넸어요.','"섬 하나 만드는 것보단 쉽지." 할망이 웨지를 선물했어요.','오름 하나하나가 치마에서 떨어진 흙이래요. 아이언을 건네줬어요.','할망이 섬을 만들던 힘을 담은 우드와 드라이버를 줬어요.'],
- ['','돌하르방은 천 년 동안 제주를 지켜봤어요. 말없이 퍼터를 내밀었어요.','바위 같은 스윙의 비밀을 조금 보여주며 웨지를 건넸어요.','"바람도 파도도 나를 비껴가지." 돌하르방이 아이언을 내줬어요.','돌하르방이 현무암으로 벼린 우드와 드라이버를 맡겼어요.']];
+ ['','돌하르방은 천 년 동안 제주를 지켜봤어요. 말없이 퍼터를 내밀었어요.','바위 같은 스윙의 비밀을 조금 보여주며 웨지를 건넸어요.','"바람도 파도도 나를 비껴가지." 돌하르방이 아이언을 내줬어요.','돌하르방이 현무암으로 벼린 우드와 드라이버를 맡겼어요.'],
+ ['','영호는 30년째 우도 등대를 지켜요. 등대 불빛처럼 곧은 퍼터를 건넸어요.','"바람은 등대에서 제일 잘 보여." 영호가 웨지를 선물했어요.','태풍 밤에 배를 인도한 이야기를 들려주며 아이언을 건넸어요.','영호가 등대 불빛을 담은 우드와 드라이버를 내줬어요.'],
+ ['','해나는 마라도에서 태어나 바람과 함께 자랐어요. 작은 퍼터를 건넸어요.','"국토 끝 바람은 거짓말을 안 해요." 해나가 웨지를 선물했어요.','최남단비 앞에서 첫 홀인원을 했대요. 아이언을 건네줬어요.','해나가 바람을 가르는 우드와 드라이버를 줬어요.'],
+ ['','미소는 가파도 청보리밭을 가꿔요. 보리처럼 부드러운 퍼터를 건넸어요.','"보리는 바람에 눕지만 꺾이지 않아요." 미소가 웨지를 선물했어요.','보리 축제 날 마을 골프 대회에서 우승했대요. 아이언을 건넸어요.','미소가 청보리 빛 우드와 드라이버를 내줬어요.'],
+ ['','대철은 추자도 앞바다를 누비는 선장이에요. 투박한 퍼터를 건넸어요.','"파도를 무서워하면 고기도 못 잡아." 대철이 웨지를 선물했어요.','나바론 절벽 아래에서 폭풍을 견딘 이야기를 들려주며 아이언을 건넸어요.','대철이 파도를 부수는 우드와 드라이버를 맡겼어요.'],
+ ['','용왕은 차귀도 아래 용궁에서 올라왔대요. 진주로 장식한 퍼터를 건넸어요.','"바다의 모든 물결을 읽는다." 용왕이 웨지를 선물했어요.','수월봉 노을 아래에서 천 년 전 이야기를 들려주며 아이언을 건넸어요.','용왕이 용궁의 보물인 우드와 드라이버를 내줬어요.']];
 const TALK=[
  {pre:['오늘 귤 따다 왔쪄. 살살 치게!','공이 또 휘면 바람 탓이우다.'],win:'허허, 잘 치는구먼. 귤 하나 먹고 가!',lose:'삼춘이 오늘은 운이 좋았네게.'},
  {pre:['첫 배 타고 왔수다. 힘은 자신 있어!','땅콩 캐던 힘으로 쳐볼게.'],win:'방향만 맞았으면 내가 이겼는디!',lose:'힘이 최고여, 허허.'},
@@ -2149,7 +2211,12 @@ const TALK=[
  {pre:['투어 쉬는 날이라 고향에 왔어요. 봐드리진 않아요.','탑동 바람은 제가 제일 잘 알죠.'],win:'...대단하네요. 투어에서 만나요.',lose:'좋은 승부였어요. 조금만 더 다듬으면 돼요.'},
  {pre:['구름 위에서 내려왔네. 한 수 보여주게.','바람은 벗이고 공은 제자일세.'],win:'허허, 속세에 고수가 있었구나.',lose:'마음을 비우면 공이 길을 찾는다네.'},
  {pre:['옛날엔 섬도 쌓았주. 공 하나쯤이야!','할망 힘 한번 보여주마.'],win:'아이고, 내 치마폭보다 넓은 실력이네!',lose:'더 먹고 다시 오라게.'},
- {pre:['......','천 년을 기다렸다. 덤벼라.'],win:'...제주의 새 주인을 인정한다.',lose:'아직 천 년 이르다.'}];
+ {pre:['......','천 년을 기다렸다. 덤벼라.'],win:'...제주의 새 주인을 인정한다.',lose:'아직 천 년 이르다.'},
+ {pre:['등대 불 끄고 왔어요. 오늘 바람 좋네요.','우도 바람은 제가 제일 잘 알아요.'],win:'등대지기가 길을 잃었네요. 인정해요.',lose:'불빛 따라 오면 다음엔 이길 거예요.'},
+ {pre:['마라도 바람에 비하면 이건 산들바람이에요!','국토 끝에서 왔어요. 끝까지 가 봐요.'],win:'와, 바람을 저보다 잘 읽다니!',lose:'바람이 제 편이었네요.'},
+ {pre:['보리밭 일 끝나고 왔어요. 천천히 해요.','퍼팅은 자신 있어요.'],win:'제 퍼팅을 이기다니 놀랐어요.',lose:'보리처럼 꾸준한 게 이기네요.'},
+ {pre:['출항 전에 한 판! 파도처럼 세게 칠 거다.','추자도 사나이는 물러서지 않아.'],win:'허, 내 배를 넘기는구먼.',lose:'바다에선 내가 선장이여!'},
+ {pre:['용궁에서 올라왔다. 각오하라.','바다의 모든 물결이 나를 돕는다.'],win:'...그대야말로 제주 바다의 주인이로다.',lose:'아직 바다가 그대를 허락하지 않았다.'}];
 function addAff(i,pts){const b=affLv(i);SV.aff[i]+=pts;const a=affLv(i);persist();const out=[];
   for(let l=b+1;l<=a;l++){out.push(STORY[i][l]);{const gg=GIFTS.filter(g=>g.it.gift===i&&g.it.glv===l);gg.forEach(g=>{if(!SV.owned.includes(g.it.id))SV.owned.push(g.it.id)});if(gg.length){persist();toast('⛳',`${NPCS[i].name}의 선물`,`「${gg.map(g=>g.it.name).join(', ')}」을(를) 받았어요. 상점 골프채에서 장착할 수 있어요.`)}}if(l===2){addCoins(AFF_COIN[i]);toast('♥',`${NPCS[i].name} 친밀도 ${l}단계`,`${STORY[i][l]} 선물 ${AFF_COIN[i]}귤을 받았어요.`)}
    else if(l===4){const g=giftOf(i);if(!SV.owned.includes(g.it.id))SV.owned.push(g.it.id);persist();toast('♥',`${NPCS[i].name} 친밀도 MAX`,`${STORY[i][l]} 「${g.it.name}」을(를) 받았어요. 상점에서 입을 수 있어요.`);badge('friend');if(NPCS.filter((_,k)=>affLv(k)>=4).length>=5)badge('friend5');if(NPCS.slice(0,10).every((_,k)=>affLv(k)>=4))badge('all5')}
@@ -2169,9 +2236,9 @@ const BADGES=[
  ['boss','고프로 격파','10단계 고프로를 이기기',1500],['champ','제주 오픈 챔피언','토너먼트 우승',1500],['champ3','왕조','토너먼트 3번 우승',3000],
  ['ocean','바다의 친구','공을 바다에 5번 빠뜨리기',150],['shop5','쇼핑 시작','아이템 5개 사기',250],['col20','수집가','아이템 20개 보유',600],['master','마스터 장비','마스터 등급 클럽 갖기',1000],['legend','전설의 시작','레전드 등급 클럽 갖기',2500],['myth','신화가 되다','신화 등급 장비 갖기',5000],
  ['ult','궁극기','궁극기 스킬 배우기',500],['lv5','레벨 5','골퍼 레벨 5 달성',200],['lv10','레벨 10','골퍼 레벨 10 달성',450],['lv20','레벨 20','골퍼 레벨 20 달성',1200],['lv30','만렙','골퍼 레벨 30 달성',4000],
- ['friend','제주 인싸','NPC 한 명과 친밀도 MAX',750],['friend5','제주 마당발','NPC 5명과 친밀도 MAX',2000],['all5','모두의 친구','모든 NPC 친밀도 MAX',4000],['rich','귤 부자','귤 30,000개 모으기',1000]];
+ ['friend','제주 인싸','NPC 한 명과 친밀도 MAX',750],['friend5','제주 마당발','NPC 5명과 친밀도 MAX',2000],['all5','모두의 친구','모든 NPC 친밀도 MAX',4000],['rich','귤 부자','귤 30,000개 모으기',1000],['d5','지옥 입성','지옥 난이도 열기',2500],['hellwin','지옥 정복','지옥 난이도에서 이기기',5000],['ch2','2막 입성','2막 상대 열기',2000],['dragon','용왕 격파','차귀도 용왕을 이기기',5000],['fest','축제 단골','감귤 축제 포인트 25점',1500]];
 function badge(id){if(SV.badges[id])return;const b=BADGES.find(x=>x[0]===id);if(!b)return;SV.badges[id]=Date.now();persist();addCoins(b[3]);toast('★',`업적 달성 · ${b[1]}`,`${b[2]} · 보상 ${b[3]}귤`)}
-function stat(k,n=1){SV.stats[k]=(SV.stats[k]||0)+n;persist();return SV.stats[k]}
+function stat(k,n=1){SV.stats[k]=(SV.stats[k]||0)+n;dailyAdd(k,n);persist();return SV.stats[k]}
 const TQ=[];function toast(icon,title,body){TQ.push([icon,title,body]);pumpToast()}
 function pumpToast(){const box=$('#toasts');while(TQ.length&&box.children.length<2){const [icon,title,body]=TQ.shift(),t=document.createElement('div');t.className='toast';t.innerHTML=`<i>${icon}</i><div><b>${title}</b>${body}</div>`;box.appendChild(t);setTimeout(()=>{t.remove();pumpToast()},3900)}}
 function updateProfBtn(){const b=$('#profBtn');if(b)b.innerHTML=`내 골퍼 <span class="lvb">Lv.${lvInfo().l}</span>`}
@@ -2180,14 +2247,14 @@ function totalVsPar(pi=0){let s=0,p=0;PL[pi].scores.forEach((v,i)=>{if(v!=null){
 const fmtPar=d=>d===0?'E':d>0?'+'+d:''+d;
 function showResult(){if(G.net){netEnd('normal');return}clearRound();G.started=false;
   const a=totalVsPar(0),b=totalVsPar(1),n=PL[1].name;let best=null;
-  const won=a.s<b.s||(a.s===b.s&&G.mode==='tour'&&countback());roundGrowth(won,a);
+  const won=a.s<b.s||(a.s===b.s&&G.mode==='tour'&&countback());roundGrowth(won,a);v20After(won,a);
   if(G.mode==='tour'&&G.tour){tourResult(a,b);paintGrowthResult(won);return}
   $('#ovBtn').textContent='새 라운드 시작';$('#ovBtn').onclick=showStart;
   try{best=+localStorage.getItem('jejuGolf3Best'+G.len);if(!best||a.s<best){localStorage.setItem('jejuGolf3Best'+G.len,a.s);best=best&&best>a.s?best:null}}catch(e){}
   sFanfare(a.s<=b.s);$('#ovTitle').textContent=a.s<b.s?'승리!':a.s>b.s?'아쉬운 패배':'무승부';
   $('#ovScore').textContent=`${a.s} : ${b.s}`;
   $('#ovSub').textContent=`나 ${a.s}타(${fmtPar(a.d)}) · ${n} ${b.s}타(${fmtPar(b.d)}). `+(a.s<b.s?`${b.s-a.s}타 차로 이겼어요!`:a.s>b.s?`${a.s-b.s}타 차로 졌어요. 다시 도전해 보세요.`:'동타로 비겼어요.')+(best?` 내 최고 기록도 새로 세웠어요.`:'');
-  const rw=dc(NPCS[G.opp].reward.win*G.len/9),got=a.s<b.s?rw:a.s===b.s?Math.round(rw*.6):Math.round(rw*.3);addCoins(got);G.roundCoins+=got;
+  const rw=dc(NPCS[G.opp].reward.win*G.len/9*(G.mode==='event'?1.5:1)),got=a.s<b.s?rw:a.s===b.s?Math.round(rw*.6):Math.round(rw*.3);addCoins(got);G.roundCoins+=got;
   $('#ovCoin').textContent=`${a.s<b.s?'승리':a.s===b.s?'무승부':'참가'} 보상 ${got}귤${DIFFS[G.diff].rm>1?` (${DIFFS[G.diff].label} ×${DIFFS[G.diff].rm})`:''} · 이번 라운드 총 ${G.roundCoins}귤 획득 · 보유 ${SV.coins}귤`;
   paintGrowthResult(a.s<b.s);$('#ovCard').innerHTML=cardHTML();$('#ov').hidden=false;$('#ovBtn').focus();
 }
@@ -2198,13 +2265,13 @@ function countback(){for(let i=G.len-1;i>=0;i--){const a=PL[0].scores[i],b=PL[1]
 function roundGrowth(won,a){{const n=(SV.stats.rounds||0)+1,w=(SV.stats.wins||0)+(won?1:0);if(n>=10)badge('r10');if(n>=50)badge('r50');if(w>=5)badge('w5');if(w>=20)badge('w20');if(w>=50)badge('w50');
    if(won&&G.diff===3)badge('prowin');if(G.len===9&&PL[0].scores.slice(0,9).every((v,i)=>v!=null&&v<=HOLES[i].par))badge('nobogey');
    if(won&&PL[0].scores.slice(0,G.len).every((v,i)=>v!=null&&v<=(PL[1].scores[i]??99)))badge('sweep');
-   const mx=NPCS.filter((_,i)=>affLv(i)>=4).length;if(mx>=5)badge('friend5')}if(won){if(G.mode==='match'&&G.opp===SV.unlockOpp&&SV.unlockOpp<12){SV.unlockOpp++;persist();if(SV.unlockOpp>=2)badge('opp3');if(SV.unlockOpp>=4)badge('opp5');if(SV.unlockOpp>=7)badge('opp8');if(SV.unlockOpp>=9)badge('allopp');toast('▶','새 상대가 열렸어요',`${NPCS[SV.unlockOpp].lv} · ${NPCS[SV.unlockOpp].name}에게 도전할 수 있어요.`);if(SV.unlockOpp===4)toast('🏆','제주 오픈이 열렸어요','토너먼트 모드에 도전할 수 있어요.')}
-    {const du=SV.diffU;if(G.diff===du[G.opp]&&du[G.opp]<3){du[G.opp]++;SV.unlockDiff=Math.max(SV.unlockDiff,du[G.opp]);persist();badge(['','d2','d3','d4'][du[G.opp]]);toast('▲','새 난이도가 열렸어요',`${NPCS[G.opp].name}와(과) '${DIFFS[du[G.opp]].label}' 난이도로 대결할 수 있어요.`)}}}
+   const mx=NPCS.filter((_,i)=>affLv(i)>=4).length;if(mx>=5)badge('friend5')}if(won){if(G.mode==='match'&&G.opp===SV.unlockOpp&&SV.unlockOpp<17){SV.unlockOpp++;persist();if(SV.unlockOpp===13)setTimeout(()=>toast('🌊','2막이 열렸어요','제주의 섬을 지키는 새 상대 5명이 기다려요. 2막 상대는 이겨야만 친밀도가 올라 전용 골프채를 받을 수 있어요.'),400);if(SV.unlockOpp>=2)badge('opp3');if(SV.unlockOpp>=4)badge('opp5');if(SV.unlockOpp>=7)badge('opp8');if(SV.unlockOpp>=9)badge('allopp');toast('▶','새 상대가 열렸어요',`${NPCS[SV.unlockOpp].lv} · ${NPCS[SV.unlockOpp].name}에게 도전할 수 있어요.`);if(SV.unlockOpp===4)toast('🏆','제주 오픈이 열렸어요','토너먼트 모드에 도전할 수 있어요.')}
+    {const du=SV.diffU;if(G.diff===du[G.opp]&&du[G.opp]<4){du[G.opp]++;SV.unlockDiff=Math.max(SV.unlockDiff,du[G.opp]);persist();badge(['','d2','d3','d4','d5'][du[G.opp]]);toast('▲','새 난이도가 열렸어요',`${NPCS[G.opp].name}와(과) '${DIFFS[du[G.opp]].label}' 난이도로 대결할 수 있어요.`)}}}
   stat('rounds');if(won){stat('wins');badge('win1');if(G.opp===9)badge('boss')}
   if(G.len===9&&a.d<0)badge('under');const k='best'+G.len;if(!SV.stats[k]||a.s<SV.stats[k]){SV.stats[k]=a.s;persist()}
-  gainXP(dx(30+(won?40+20*G.opp:0)));G.affNew=addAff(G.opp,1+(won?2:0));if(SV.owned.length>=20)badge('col20')}
+  gainXP(dx(30+(won?40+20*G.opp:0)));G.affNew=G.opp>=13&&!won?[]:addAff(G.opp,1+(won?2:0));if(SV.owned.length>=20)badge('col20')}
 function paintGrowthResult(won){const L=lvInfo(),t=TALK[G.opp],n=NPCS[G.opp],al=affLv(G.opp);
-  $('#ovXp').textContent=`경험치 +${G.roundXP||0} · 레벨 ${L.l} (${L.cur}/${L.need}) · ${n.name} 친밀도 ${'♥'.repeat(al)}${'♡'.repeat(4-al)}`;
+  $('#ovXp').textContent=`경험치 +${G.roundXP||0} · 레벨 ${L.l} (${L.cur}/${L.need}) · ${n.name} 친밀도 ${'♥'.repeat(al)}${'♡'.repeat(4-al)}${G.opp>=13?(won?' · 승리로 친밀도 +3':' · 2막 상대는 이겨야 친밀도가 올라요'):''}`;
   const tk=$('#ovTalk');tk.innerHTML=`<i style="background:${n.col}">${n.name[0]}</i><div><b>${n.name}</b>${won?t.win:t.lose}</div>`;tk.hidden=false}
 function tourResult(a,b){const T=G.tour,st=T.stage,n=PL[1].name;let win=a.s<b.s,cb=false;if(a.s===b.s){win=countback();cb=true}
   if(win)gainXP(dx(80));if(win&&st===2){gainXP(dx(200));badge('champ');const tr=SV.trophies||{};if((tr[3]||0)+(tr[6]||0)+(tr[9]||0)+1>=3)badge('champ3')}
@@ -2222,7 +2289,7 @@ function paintTour(){const box=$('#tourBox'),on=G.mode==='tour';box.hidden=!on;$
   box.innerHTML=`<h5>제주 오픈 · ${G.len}홀 매치</h5><ol>${STAGES.map((n,i)=>`<li><i style="background:${NPCS[TOUR_OPP[i]].col};border:1px solid #fff6"></i><span>${n} · vs ${NPCS[TOUR_OPP[i]].name} (${NPCS[TOUR_OPP[i]].lv})</span><b>${dc(tPrize(i)).toLocaleString()}귤</b></li>`).join('')}</ol>
   <p>3연승하면 상금 총 ${tot.toLocaleString()}귤과 우승 트로피를 받아요. 지면 그 단계에서 끝나고, 홀 승리 보상은 따로 받아요. 동타는 카운트백으로 가려요.</p>${tr?`<span class="trophy">보유 트로피 (${G.len}홀) ${tr}개</span>`:''}`}
 $('#modeRow').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b||b.disabled)return;G.mode=b.dataset.mode;setTimeout(markDiff,0);$('#modeRow').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===G.mode)));paintTour()});
-function newRound(){HOLES=courseFor(G.opp);G.started=true;G.roundCoins=0;G.roundXP=0;{const tl=TALK[G.opp].pre;setTimeout(()=>toast(NPCS[G.opp].name[0],NPCS[G.opp].name,tl[Math.floor(Math.random()*tl.length)]),600)}PL.forEach(p=>p.scores=[]);PL[1].name=NPCS[G.opp].name;G.honor=0;$('#ov').hidden=true;startHole(0)}
+function newRound(){HOLES=curC(G.opp);G.started=true;G.roundCoins=0;G.roundXP=0;{const tl=TALK[G.opp].pre;setTimeout(()=>toast(NPCS[G.opp].name[0],NPCS[G.opp].name,tl[Math.floor(Math.random()*tl.length)]),600)}PL.forEach(p=>p.scores=[]);PL[1].name=NPCS[G.opp].name;G.honor=0;$('#ov').hidden=true;startHole(0)}
 
 /* ---------- UI ---------- */
 {const mmEl=$('#mm');['pointerdown','touchstart','mousedown','touchmove','pointermove'].forEach(ev=>mmEl.addEventListener(ev,e=>e.stopPropagation(),{passive:true}));
@@ -2293,9 +2360,9 @@ function nudge(deg){if(G.phase!=='aim')return;G.aim+=deg*Math.PI/180;renderAll()
 const lvEl=$('#lv');
 DIFFS.forEach((d,i)=>{const b=document.createElement('button');b.type='button';b.id='lv'+i;b.innerHTML=`<b>${i+1}</b>${d.label}<small>${d.note}<br><span class="rwm">보상 귤 ×${d.rm} · 경험치 ×${d.xm}</span></small>`;b.onclick=()=>{if(b.disabled)return;G.diff=i;markDiff()};lvEl.appendChild(b)});
 const oppEl=$('#opp');
-NPCS.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.id='opp'+i;b.innerHTML=`<i style="background:${n.col}"></i>${n.name}<small>${n.lv} · ${n.note}<br>홈 코스 · ${courseName(i)}<br>승리 ${n.reward.win}귤 · 홀 승리 ${n.reward.hole}귤</small>`;b.onclick=()=>{if(i>SV.unlockOpp)return;G.opp=i;HOLES=courseFor(i);markOpp();paintHoles();markDiff()};oppEl.appendChild(b)});
+NPCS.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.id='opp'+i;b.innerHTML=`<i style="background:${n.col}"></i>${n.name}<small>${n.lv} · ${n.note}<br>홈 코스 · ${courseName(i)}<br>승리 ${n.reward.win}귤 · 홀 승리 ${n.reward.hole}귤${i>=13?'<br><b class="affr">친밀도는 이길 때만 +3</b>':''}</small>`;b.onclick=()=>{if(i>SV.unlockOpp)return;G.opp=i;HOLES=curC(i);markOpp();paintHoles();markDiff()};oppEl.appendChild(b)});
 function markOpp(){if(G.opp>SV.unlockOpp)G.opp=SV.unlockOpp;NPCS.forEach((n,i)=>{const b=$('#opp'+i),lk=i>SV.unlockOpp;b.setAttribute('aria-pressed',String(i===G.opp));b.disabled=lk;b.classList.toggle('locked',lk);
-  b.innerHTML=lk?`<i style="background:var(--line)"></i>${n.lv} · 잠김<small>${NPCS[i-1].name}을(를) 이기면 열려요</small>`:`<i style="background:${n.col}"></i>${n.name}<small>${n.lv} · ${n.note}<br>홈 코스 · ${courseName(i)}<br>승리 ${n.reward.win}귤 · 홀 승리 ${n.reward.hole}귤</small>`})}
+  b.innerHTML=lk?`<i style="background:var(--line)"></i>${n.lv} · 잠김<small>${NPCS[i-1].name}을(를) 이기면 열려요</small>`:`<i style="background:${n.col}"></i>${n.name}<small>${n.lv} · ${n.note}<br>홈 코스 · ${courseName(i)}<br>승리 ${n.reward.win}귤 · 홀 승리 ${n.reward.hole}귤${i>=13?'<br><b class="affr">친밀도는 이길 때만 +3</b>':''}</small>`})}
 function paintGo(){const b=$('#goBtn');if(!b)return;const tour=G.mode==='tour',who=tour?TOUR_OPP[0]:G.opp;
   b.innerHTML=`라운드 시작<small>${tour?'제주 오픈 토너먼트':'vs '+NPCS[who].name} · ${G.len}홀 · ${DIFFS[G.diff].label}</small>`}
 $('#goBtn').onclick=()=>{audioInit();jejuBoot.show('코스로 이동하고 있어요');jejuBoot.later(()=>{$('#start').hidden=true;G.mode==='tour'?startTour():newRound();jejuBoot.hide()})};
@@ -2358,10 +2425,10 @@ function renderShop(){paintGearSum();
   const tb=([k,v])=>`<button type="button" data-tab="${k}" aria-pressed="${k===shopTab}">${v.label}</button>`,ents=Object.entries(SHOP);
   const isClub=!!SHOP[shopTab].club;
   $('#tabs').innerHTML=`<div class="shopgrp"><button type="button" data-grp="wear" aria-pressed="${!isClub}">의상 · 공</button><button type="button" data-grp="club" aria-pressed="${isClub}">골프채</button></div>`+ents.filter(e=>!!e[1].club===isClub).map(tb).join('');
-  $('#items').innerHTML=cat.items.map(it=>`<button type="button" data-item="${it.id}" class="${it.id===sel.id?'sel':''}"><span class="sw" style="${swStyle(it)}"></span>${it.name}<small class="${owns(it)?'own':''}">${owns(it)?'보유':it.gift!=null?'NPC 선물':it.price+'귤'}</small>${it.rare?`<span class="prem ${it.rare==='신화'?'myth':it.rare==='전용'?'npc':'leg'}">${it.rare==='전용'?'NPC 전용':it.rare}</span>`:it.tier&&TIERN.indexOf(it.tier)>=5?`<span class="prem ${it.tier==='신화'?'myth':'leg'}">${it.tier}</span>`:it.price>=1600?'<span class="prem">프리미엄</span>':''}${E[shopTab].id===it.id?'<span class="eq">착용</span>':''}</button>`).join('');
+  $('#items').innerHTML=cat.items.map(it=>`<button type="button" data-item="${it.id}" class="${it.id===sel.id?'sel':''}"><span class="sw" style="${swStyle(it)}"></span>${it.name}<small class="${owns(it)?'own':''}">${owns(it)?'보유':it.evt?'축제 보상':it.gift!=null?'NPC 선물':it.price+'귤'}</small>${it.rare?`<span class="prem ${it.rare==='신화'?'myth':it.rare==='전용'?'npc':'leg'}">${it.rare==='전용'?'NPC 전용':it.rare}</span>`:it.tier&&TIERN.indexOf(it.tier)>=5?`<span class="prem ${it.tier==='신화'?'myth':'leg'}">${it.tier}</span>`:it.price>=1600?'<span class="prem">프리미엄</span>':''}${E[shopTab].id===it.id?'<span class="eq">착용</span>':''}</button>`).join('');
   $('#avatar').innerHTML=cat.club?clubSVG(shopTab,sel):avatarSVG({...E,[shopTab]:sel},TIERSTY[Math.max(0,TIERN.indexOf(E.driver.tier))].body);
   const short=sel.price-SV.coins;
-  const btn=eq?'<button type="button" disabled>착용 중</button>':(sel.gift!=null&&!own)?`<button type="button" disabled>${NPCS[sel.gift].name} 친밀도 ${sel.glv?sel.glv+'단계':'MAX'} 선물</button>`:own?'<button type="button" id="shopAct">입기</button>':short>0?`<button type="button" disabled>귤 ${short}개가 더 필요해요</button>`:`<button type="button" id="shopAct">구매하고 입기 · ${sel.price}귤</button>`;
+  const btn=eq?'<button type="button" disabled>착용 중</button>':(sel.evt&&!own)?'<button type="button" disabled>감귤 축제 포인트 보상</button>':(sel.gift!=null&&!own)?`<button type="button" disabled>${NPCS[sel.gift].name} 친밀도 ${sel.glv?sel.glv+'단계':'MAX'} 선물</button>`:own?'<button type="button" id="shopAct">입기</button>':short>0?`<button type="button" disabled>귤 ${short}개가 더 필요해요</button>`:`<button type="button" id="shopAct">구매하고 입기 · ${sel.price}귤</button>`;
   let bars='';if(cat.club||cat.items.some(x=>x.st)){const cur=E[shopTab].st||{},sst=sel.st||{},keys=[...new Set([...Object.keys(sst),...Object.keys(cur)])];bars=keys.length?'<div class="stats2">'+keys.map(k=>{const v=sst[k]||0,c0=cur[k]||0,mx=STATMAX[k];return`<div class="stbar">${STATN[k]}<i><s style="width:${c0/mx*100}%"></s><b style="width:${v/mx*100}%;opacity:${v>c0?1:.85}"></b></i><em class="${v>c0?'up':''}">+${v}%</em></div>`}).join('')+'</div>':'<span>능력치 없음</span>'}
   $('#shopInfo').innerHTML=`<span>${cat.label}${sel.tier?` · <span class="tier">${sel.tier}</span>`:''}</span><b>${sel.name}</b>${bars}<span>${own?'보유 중인 아이템':`가격 ${sel.price}귤`}</span>${btn}<span>${shopNote}</span>`;
   $('#shopCoin').textContent=SV.coins+'귤';
@@ -2372,7 +2439,7 @@ $('#tabs').addEventListener('click',e=>{const g=e.target.closest('[data-grp]');i
   const b=e.target.closest('[data-tab]');if(!b)return;shopTab=b.dataset.tab;shopSel=null;shopNote='';renderShop()});
 $('#items').addEventListener('click',e=>{const b=e.target.closest('[data-item]');if(!b)return;shopSel=SHOP[shopTab].items.find(i=>i.id===b.dataset.item);shopNote='';renderShop()});
 $('#shopInfo').addEventListener('click',e=>{if(!e.target.closest('#shopAct'))return;const it=shopSel||equipItems()[shopTab];
-  if(!owns(it)){if(it.gift!=null||SV.coins<it.price)return;SV.coins-=it.price;SV.owned.push(it.id);sCoin();{const bought=SV.owned.filter(id=>!/^n\d/.test(id)).length;if(bought>=5)badge('shop5');if(SV.owned.length>=20)badge('col20');if(['마스터','레전드','신화'].includes(it.tier))badge('master');if(['레전드','신화'].includes(it.tier))badge('legend');if(it.tier==='신화'||it.rare==='신화')badge('myth')}shopNote=`${it.name}을(를) 샀어요. 귤 ${it.price}개를 썼어요.`}else shopNote=SHOP[shopTab].club?`${it.name}로 바꿨어요.`:`${it.name}으로 갈아입었어요.`;
+  if(!owns(it)){if(it.evt||it.gift!=null||SV.coins<it.price)return;SV.coins-=it.price;SV.owned.push(it.id);sCoin();{const bought=SV.owned.filter(id=>!/^n\d/.test(id)).length;if(bought>=5)badge('shop5');if(SV.owned.length>=20)badge('col20');if(['마스터','레전드','신화'].includes(it.tier))badge('master');if(['레전드','신화'].includes(it.tier))badge('legend');if(it.tier==='신화'||it.rare==='신화')badge('myth')}shopNote=`${it.name}을(를) 샀어요. 귤 ${it.price}개를 썼어요.`}else shopNote=SHOP[shopTab].club?`${it.name}로 바꿨어요.`:`${it.name}으로 갈아입었어요.`;
   SV.equip[shopTab]=it.id;persist();updateCoinUI();dressRig();renderShop();if(!$('#start').hidden||true)renderAll()});
 $('#shopClose').onclick=()=>{$('#shop').hidden=true;if(typeof paintMe==='function')paintMe()};
 $('#shopBtn').onclick=openShop;$('#ovShop').onclick=openShop;$('#startShop').onclick=openShop;
@@ -2386,8 +2453,8 @@ function renderProf(){const L=lvInfo(),f=freeSP();
       return`<div class="sk${k.ult?' ult':''}"><b>${k.name}</b><small>${k.desc}${k.ult?(lockU?' · 이 계열에 5점을 찍으면 열려요':' · 궁극기'):''}</small><div class="pips">${[...Array(k.max)].map((_,i)=>`<i class="${i<r?'on':''}"></i>`).join('')}</div><button type="button" data-sk="${k.id}" ${can?'':'disabled'}>${r>=k.max?'MAX':'+1'}</button></div>`}).join('')+'</div>'}).join('')+'</div>'+
     `<p class="note">레벨이 오를 때마다 스킬 포인트 1개를 얻어요. 스킬 효과는 내 샷에만 적용돼요.</p><button type="button" class="x" id="skReset" ${spentSP()?'':'disabled'}>스킬 초기화 · 500귤</button>`}
   else if(pTab==='npc'){h='<div class="npcl">'+NPCS.map((n,i)=>{const al=affLv(i),nx=affT(i)[al+1];return`<div class="npc"><span class="av" style="background:${n.col}">${n.name[0]}</span><b>${n.name}<span>${n.lv}</span></b>
-      <div class="hearts">${[1,2,3,4].map(k=>`<span class="${k<=al?'':'off'}">♥</span>`).join('')}<small style="color:var(--muted);font-size:11px;margin-left:6px">${al>=4?'MAX':`다음 단계까지 ${nx-SV.aff[i]}점`}</small></div>
-      <ul>${[1,2,3,4].map(l=>l<=al?`<li>${STORY[i][l]}</li>`:`<li class="lock">${giftTxt(i,l)?`전용 선물 「${giftTxt(i,l)}」`:l===2?`${AFF_COIN[i]}귤 선물`:'이야기가 잠겨 있어요'}</li>`).join('')}</ul></div>`}).join('')+'</div><p class="note">대결하면 친밀도 +1, 이기면 +3이에요.</p>'}
+      <div class="hearts">${[1,2,3,4].map(k=>`<span class="${k<=al?'':'off'}">♥</span>`).join('')}<small style="color:var(--muted);font-size:11px;margin-left:6px">${al>=4?'MAX':`다음 단계까지 ${nx-SV.aff[i]}점`}${i>=13?' · 이겨야만 올라요':''}</small></div>
+      <ul>${[1,2,3,4].map(l=>l<=al?`<li>${STORY[i][l]}</li>`:`<li class="lock">${giftTxt(i,l)?`전용 선물 「${giftTxt(i,l)}」`:l===2?`${AFF_COIN[i]}귤 선물`:'이야기가 잠겨 있어요'}</li>`).join('')}</ul></div>`}).join('')+'</div><p class="note">대결을 마치면 친밀도 +1, 이기면 +3이에요. 11단계 이상 상대는 단계마다 필요한 점수가 2배예요. <b>2막 상대(14~18단계)는 이겨야만 친밀도가 올라요</b>(승리 +3, 지거나 비기면 0).</p>'}
   else if(pTab==='badge'){const got=BADGES.filter(b=>SV.badges[b[0]]).length;h=`<p class="note">${got}/${BADGES.length}개 달성</p><div class="badges">`+BADGES.map(b=>`<div class="bdg${SV.badges[b[0]]?'':' lock'}"><i>${SV.badges[b[0]]?'★':'?'}</i><b>${b[1]}</b><small>${b[2]}<br>${b[3]}귤</small></div>`).join('')+'</div>'}
   else if(pTab==='bk'){h=`<div class="bk"><h5>내 데이터 내보내기</h5><p class="note">아래 코드를 복사해서 메모장이나 카톡 나에게 보내기에 보관하세요. 귤, 아이템, 레벨, 스킬, 친밀도, 업적, 기록이 모두 들어 있어요.</p>
     <textarea id="bkOut" readonly>${exportCode()}</textarea><div class="row2"><button type="button" id="bkCopy">코드 복사</button></div>
@@ -2410,10 +2477,10 @@ $('#pbody').addEventListener('click',e=>{
     m.className='msg';m.innerHTML=`코드 확인: 귤 ${d.coins.toLocaleString()} · 레벨 ${lv} · 아이템 ${d.owned.length}개. 지금 데이터를 이 내용으로 바꿀까요?<div class="row2" style="margin-top:6px"><button type="button" id="bkYes">바꾸기</button><button type="button" class="x" id="bkNo">취소</button></div>`;return}
   if(e.target.closest('#bkNo')){pendingImport=null;$('#bkMsg').textContent='취소했어요.';return}
   if(e.target.closest('#bkYes')&&pendingImport){SV=Object.assign({coins:0,owned:[],equip:{}},pendingImport,{v19:1});SV.xp=SV.xp||0;SV.skills=SV.skills||{};SV.aff=Array.isArray(SV.aff)?SV.aff:[];
-if(SV.aff.length===5&&!SV.aff10){const o=SV.aff;SV.aff=[o[0],0,o[1],0,o[2],0,0,o[3],0,o[4]]}while(SV.aff.length<13)SV.aff.push(0);SV.aff10=true;
+if(SV.aff.length===5&&!SV.aff10){const o=SV.aff;SV.aff=[o[0],0,o[1],0,o[2],0,0,o[3],0,o[4]]}while(SV.aff.length<18)SV.aff.push(0);SV.aff10=true;
 SV.badges=SV.badges||{};SV.stats=SV.stats||{};SV.trophies=SV.trophies||{};
 if(typeof SV.unlockOpp!=='number'){let u=0;SV.aff.forEach((a,i)=>{if(a>=3)u=Math.max(u,i+1)});SV.unlockOpp=Math.min(9,u)}if(typeof SV.unlockDiff!=='number')SV.unlockDiff=0;if(!Array.isArray(SV.diffU)){SV.diffU=NPCS.map((_,k)=>k<=SV.unlockOpp?SV.unlockDiff:0)}SV.gift10k=true;SV.gift20k=true;repairProgress();
-    pendingImport=null;persist();updateCoinUI();updateProfBtn();dressRig();renderProf();HOLES=courseFor(G.opp);markOpp();markDiff();paintHoles();paintMe();paintGo();const m=$('#bkMsg');if(m){m.className='msg ok';m.textContent='불러오기를 마쳤어요.'}toast('✓','데이터를 불러왔어요',`귤 ${SV.coins.toLocaleString()} · 레벨 ${lvInfo().l}`);return}const b=e.target.closest('[data-sk]');if(b){const k=SKILLS.find(x=>x.id===b.dataset.sk);if(freeSP()>0&&sk(k.id)<k.max){SV.skills[k.id]=sk(k.id)+1;persist();if(k.ult)badge('ult');sClick(1);renderProf()}return}
+    pendingImport=null;persist();updateCoinUI();updateProfBtn();dressRig();renderProf();HOLES=curC(G.opp);markOpp();markDiff();paintHoles();paintMe();paintGo();const m=$('#bkMsg');if(m){m.className='msg ok';m.textContent='불러오기를 마쳤어요.'}toast('✓','데이터를 불러왔어요',`귤 ${SV.coins.toLocaleString()} · 레벨 ${lvInfo().l}`);return}const b=e.target.closest('[data-sk]');if(b){const k=SKILLS.find(x=>x.id===b.dataset.sk);if(freeSP()>0&&sk(k.id)<k.max){SV.skills[k.id]=sk(k.id)+1;persist();if(k.ult)badge('ult');sClick(1);renderProf()}return}
   if(e.target.closest('#skReset')){if(SV.coins<500){toast('!','귤이 부족해요','스킬 초기화에는 500귤이 필요해요.');return}SV.coins-=500;SV.skills={};persist();updateCoinUI();renderProf()}});
 updateProfBtn();
 function paintMe(){const box=$('#meCard');if(!box)return;const L=lvInfo(),f=freeSP(),E=equipItems(),got=BADGES.filter(b=>SV.badges[b[0]]).length,tr=SV.trophies||{},tro=(tr[3]||0)+(tr[6]||0)+(tr[9]||0),S=SV.stats,g=gearSt();
@@ -2423,7 +2490,7 @@ function paintMe(){const box=$('#meCard');if(!box)return;const L=lvInfo(),f=free
    <div class="gear">드라이버 ${E.driver.tier} · 아이언 ${E.iron.tier} · 퍼터 ${E.putter.tier} · 공 ${E.ball.name}${best?`<br>장비 능력치 ${best}`:''}</div>
    <div class="acts"><button type="button" id="meProf">내 골퍼${f>0?' · 스킬 찍기':''}</button><button type="button" id="meShop">상점</button></div>`;
   $('#meProf').onclick=openProf;$('#meShop').onclick=openShop}
-function resetAll(){SV={v19:1,coins:1000,owned:[],equip:{},gift10k:true,gift20k:true,xp:0,skills:{},aff:[0,0,0,0,0,0,0,0,0,0,0,0,0],aff10:true,unlockOpp:0,unlockDiff:0,diffU:[0,0,0,0,0,0,0,0,0,0,0,0,0],badges:{},stats:{},trophies:{}};G.opp=0;G.diff=0;persist();clearRound();
+function resetAll(){SV={v19:1,coins:1000,owned:[],equip:{},gift10k:true,gift20k:true,xp:0,skills:{},aff:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],aff10:true,unlockOpp:0,unlockDiff:0,diffU:[0,0,0,0,0,0,0,0,0,0,0,0,0],badges:{},stats:{},trophies:{}};G.opp=0;G.diff=0;persist();clearRound();
   try{[3,6,9].forEach(n=>localStorage.removeItem('jejuGolf3Best'+n))}catch(e){}
   G.mode='match';G.tour=null;G.started=false;PL.forEach(p=>p.scores=[]);
   updateCoinUI();updateProfBtn();dressRig();renderAll();paintResume();paintMe();paintTour();$('#resetConfirm').hidden=true;$('#resetBtn').hidden=false;
@@ -2434,7 +2501,7 @@ $('#resetYes').onclick=resetAll;
 $('#resetBackup').onclick=()=>{pTab='bk';openProf()};
 $('#quitNo').onclick=()=>{$('#quitBar').hidden=true};
 $('#quitYes').onclick=()=>{if(G.net){netEnd('forfeit');return}$('#quitBar').hidden=true;clearRound();G.started=false;G.tour=null;G.phase='idle';G.waitFn=null;G.rp=null;$('#view').classList.remove('replay');setMsg('라운드를 포기했어요.');renderAll();toast('↩','라운드를 포기했어요','시작 화면에서 새로 골라 보세요.');showStart()};
-function showStart(){markDiff();markOpp();HOLES=courseFor(G.opp);paintHoles();paintResume();paintMe();$('#resetConfirm').hidden=true;$('#resetBtn').hidden=false;$('#ov').hidden=true;$('#start').hidden=false;$('#modeRow').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===G.mode)));paintTour();$('#lv'+G.diff).focus({preventScroll:true});$('#start .box').scrollTop=0}
+function showStart(){paintV20();markDiff();markOpp();HOLES=curC(G.opp);paintHoles();paintResume();paintMe();$('#resetConfirm').hidden=true;$('#resetBtn').hidden=false;$('#ov').hidden=true;$('#start').hidden=false;$('#modeRow').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mode===G.mode)));paintTour();$('#lv'+G.diff).focus({preventScroll:true});$('#start .box').scrollTop=0}
 $('#main').onclick=onMain;
 $('#aL5').onclick=()=>nudge(-5);$('#aL1').onclick=()=>nudge(-1);$('#aR1').onclick=()=>nudge(1);$('#aR5').onclick=()=>nudge(5);
 $('#aPin').onclick=()=>{if(G.phase!=='aim')return;aimToPin();renderAll()};
@@ -2546,7 +2613,7 @@ function netTag(w){if(!R3||!player)return;if(!G.net||!G.net.started){if(netTagS)
   if(!netTagT[t]){const cv=document.createElement('canvas');cv.width=320;cv.height=80;const c=cv.getContext('2d');c.font='700 40px "IBM Plex Sans KR",system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';const wd=Math.min(304,c.measureText(t).width+44);c.fillStyle='rgba(10,32,34,.72)';c.beginPath();c.roundRect?c.roundRect(160-wd/2,8,wd,64,24):c.rect(160-wd/2,8,wd,64);c.fill();c.fillStyle=w===0?'#ffffff':'#ffd27a';c.fillText(t,160,42,280);const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;netTagT[t]=tx}
   netTagS.material.map=netTagT[t];netTagS.material.needsUpdate=true;netTagS.visible=true}
 function netBegin(){const N=G.net,r=N.room,op=N.role?r.host:r.guest;N.started=true;N.myName=netClean((N.role?r.guest:r.host).n);SV.coins-=NET_STAKE;persist();updateCoinUI();N.look=op.look||null;N.seed=r.seed;G.mode='match';G.tour=null;G.opp=r.course;G.len=r.len;G.diff=r.diff||0;
-  HOLES=courseFor(G.opp);G.started=true;G.roundCoins=0;G.roundXP=0;PL.forEach(p=>p.scores=[]);PL[1].name=netClean(op.n)||'친구';G.honor=N.role===0?0:1;
+  HOLES=curC(G.opp);G.started=true;G.roundCoins=0;G.roundXP=0;PL.forEach(p=>p.scores=[]);PL[1].name=netClean(op.n)||'친구';G.honor=N.role===0?0:1;
   $('#pvp').hidden=true;$('#start').hidden=true;$('#ov').hidden=true;$('#quitBar p').textContent=`대결을 포기하면 걸어 둔 ${NET_STAKE.toLocaleString()}귤을 잃고 상대가 승리해요.`;
   N.lastSeen=N.tick=Date.now();N.timer=setInterval(()=>{const now=Date.now();if(now-N.tick>40000)N.lastSeen=now;N.tick=now;netApi(N.code,'PATCH',{['hb'+N.role]:now}).catch(()=>{});if(now-N.lastSeen>NET_WAIT)netEnd('oppleft')},20000);
   toast('⛳','친구 대결 시작',`vs ${PL[1].name} · ${NET_STAKE.toLocaleString()}귤을 걸었어요.`);startHole(0)}
@@ -2579,7 +2646,72 @@ $('#pvpClose').onclick=()=>{netCancel();$('#pvp').hidden=true};$('#pvpMake').onc
  $('#qBtn').onclick=cycleQ;paintQ();
  {const KEY='jejuGolfView',bt=$('#sizeBtn');let v=null;try{v=localStorage.getItem(KEY)}catch(e){}if(!v)v=(navigator.maxTouchPoints||0)>0?'full':'phone';const ap=()=>{const wide=innerWidth>=700;document.body.classList.toggle('phonev',wide&&v==='phone');bt.hidden=!wide;bt.textContent=`화면 크기 · ${v==='phone'?'폰 크기':'전체 화면'}`};bt.onclick=()=>{v=v==='phone'?'full':'phone';try{localStorage.setItem(KEY,v)}catch(e){}ap();mn.classList.remove('open')};addEventListener('resize',ap);ap()}
 sh.addEventListener('click',e=>{if(e.target.closest('.clubs button'))setTimeout(()=>set(sh,false),140)})}
-PL[1].name=NPCS[G.opp].name;HOLES=courseFor(G.opp);startHole(0);sizeMM();fitView();requestAnimationFrame(loop);showStart();
+/* ---------- V20: daily missions, festival event, weekly ranking, device sync, putt guide ---------- */
+function v20Day(o){const d=new Date(Date.now()+(o||0)*864e5);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function curC(o){return courseFor(G.mode==='event'?99:o)}
+/* festival event */
+var EVT={name:'겨울 감귤 축제',start:'2026-11-09',end:'2026-12-31',steps:[[5,'2,000귤',()=>addCoins(2000)],[10,'축제 황금 귤 볼',()=>v20Give('e0')],[25,'감귤 축제 왕관',()=>{v20Give('e1');badge('fest')}]]};
+function evOn(){const t=v20Day();return t>=EVT.start&&t<=EVT.end}
+function v20Give(id){if(!SV.owned.includes(id))SV.owned.push(id);persist();const it=[...SHOP.ball.items,...SHOP.hat.items].find(x=>x.id===id);toast('🍊','축제 보상',`「${it?it.name:id}」을(를) 받았어요. 상점에서 착용할 수 있어요.`)}
+function evAdd(p){const b=SV.evp||0;SV.evp=b+p;persist();EVT.steps.forEach(([n,_,f])=>{if(b<n&&SV.evp>=n)f()})}
+/* daily missions */
+var DMS=[{id:'round',t:'라운드 {n}판 끝내기',k:'rounds',n:[2,3],r:300},{id:'win',t:'NPC 대결 {n}번 이기기',k:'wins',n:[1,2],r:500},{id:'bird',t:'버디 {n}개 하기',k:'birdies',n:[1,2],r:450},
+ {id:'perf',t:'PERFECT 샷 {n}번',k:'perfects',n:[3,6],r:350},{id:'par',t:'파 이하로 {n}홀 끝내기',k:'parx',n:[4,8],r:350},{id:'chip',t:'그린 밖에서 칩인 1번',k:'chipins',n:[1],r:700},
+ {id:'long',t:'드라이버 {n}y 이상 날리기',k:'long',n:[230,250],r:400,max:1},{id:'ev',t:'감귤 축제 라운드 {n}판',k:'evround',n:[1,2],r:450,ev:1}];
+function dailyState(){const d=v20Day();if(!SV.daily||SV.daily.d!==d){const r=rng(+d.replace(/-/g,'')),pool=DMS.filter(m=>!m.ev||evOn()),pick=[];while(pick.length<3&&pool.length){const m=pool.splice(Math.floor(r()*pool.length),1)[0];pick.push({id:m.id,k:m.k,max:m.max,r:m.r,n:m.n[Math.floor(r()*m.n.length)],t:m.t})}SV.daily={d,m:pick,p:{},got:{}}}return SV.daily}
+function dailyHit(k,v,isMax){if(typeof SV==='undefined'||!SV.stats)return;const D=dailyState();let ch=false;D.m.forEach(m=>{if(m.k!==k||D.got[m.id])return;D.p[m.id]=isMax?Math.max(D.p[m.id]||0,v):(D.p[m.id]||0)+v;ch=true;if(D.p[m.id]>=m.n){D.got[m.id]=1;setTimeout(()=>{addCoins(m.r);toast('✔','오늘의 미션 완료',`${m.t.replace('{n}',m.n)} · +${m.r}귤`)},300)}});if(ch)persist()}
+function dailyAdd(k,n){dailyHit(k,n||1,false)}function dailyMax(k,v){dailyHit(k,v,true)}
+function paintV20(){const b=$('#dmBox');if(!b)return;const D=dailyState();
+  let h=`<h5>오늘의 미션 <span>자정에 바뀌어요</span></h5>`+D.m.map(m=>{const p=Math.min(D.p[m.id]||0,m.n),ok=D.got[m.id];return`<div class="dm${ok?' ok':''}"><b>${m.t.replace('{n}',m.n)}</b><i><s style="width:${p/m.n*100}%"></s></i><em>${ok?'완료':m.max?`${p}y`:`${p}/${m.n}`} · ${m.r}귤</em></div>`}).join('');
+  if(evOn()){const p=SV.evp||0,nx=EVT.steps.find(s=>p<s[0]);h+=`<div class="evb"><b>🍊 ${EVT.name} · ${EVT.end.slice(5).replace('-','.')}까지</b><span>축제 포인트 ${p}점${nx?` · ${nx[0]}점에 「${nx[1]}」`:' · 보상을 모두 받았어요'}<br>축제 코스에서 승리 3점, 참가 1점 · 귤 보상 1.5배</span></div>`}
+  b.innerHTML=h;const eb=$('#modeRow [data-mode="event"]');if(eb){eb.disabled=!evOn();if(!evOn()&&G.mode==='event')G.mode='match'}}
+/* weekly ranking */
+const RANK_FAIL='랭킹 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.';
+function weekId(){const d=new Date(),k=(d.getDay()+6)%7;d.setDate(d.getDate()-k);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function devId(){let v='';try{v=localStorage.getItem('jejuGolfDev')||''}catch(e){}if(!v){v=Array.from(crypto.getRandomValues(new Uint8Array(8)),x=>x.toString(16).padStart(2,'0')).join('');try{localStorage.setItem('jejuGolfDev',v)}catch(e){}}return v}
+function myNick(){let n='';try{n=localStorage.getItem('jejuGolfNick')||''}catch(e){}return netClean(n)}
+const rankKey=len=>(G.mode==='event'?'ev':'c'+G.opp)+'_'+len;
+const rankApi=(p,m,b)=>fetch(`${NET_DB}/rank/${weekId()}/${p}.json`,{method:m||'GET',body:b===undefined?undefined:JSON.stringify(b)}).then(r=>{if(!r.ok)throw new Error('rank');return r.json()});
+async function rankSubmit(a){const n=myNick();if(!n)return;const k=rankKey(G.len),id=devId();try{const old=await rankApi(`${k}/${id}`);if(old&&old.s<=a.s)return;await rankApi(`${k}/${id}`,'PUT',{n,s:a.s,d:a.d,t:Date.now()});toast('🏆','주간 랭킹 기록',`${a.s}타 기록을 올렸어요.`)}catch(e){}}
+let rankLen=9;
+async function paintRank(){const box=$('#rankList'),cn=G.mode==='event'?'감귤 축제 코스':courseName(G.opp);$('#rankHead').textContent=`${cn} · ${rankLen}홀`;$('#rankTabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.l===rankLen)));box.innerHTML='<p class="note">불러오는 중이에요...</p>';
+  try{const d=await rankApi(rankKey(rankLen))||{},me=devId(),L=Object.entries(d).map(([k,v])=>({...v,me:k===me})).filter(v=>typeof v.s==='number').sort((a,b)=>a.s-b.s||a.t-b.t).slice(0,30);
+   box.innerHTML=L.length?'<ol class="rk">'+L.map((v,i)=>`<li class="${v.me?'me':''}"><span>${i+1}</span><b>${netClean(v.n)}</b><em>${v.s}타 (${fmtPar(v.d)})</em></li>`).join('')+'</ol>':'<p class="note">이번 주 기록이 아직 없어요. 첫 기록을 남겨 보세요.</p>'}catch(e){box.innerHTML=`<p class="note">${RANK_FAIL}</p>`}}
+/* device sync */
+const SYNC_KEY='jejuGolfSync',SYNC_ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function syncCfg(){try{return JSON.parse(localStorage.getItem(SYNC_KEY))}catch(e){return null}}
+async function syncHash(code,pw){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('jjg:'+code+':'+pw));return Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('').slice(0,32)}
+const syncApi=(k,m,b)=>fetch(`${NET_DB}/users/${k}.json`,{method:m||'GET',body:b===undefined?undefined:JSON.stringify(b)}).then(r=>{if(!r.ok)throw new Error('sync');return r.json()});
+function syncPush(){const c=syncCfg();if(!c||window._syncHold)return;clearTimeout(window._syncT);window._syncT=setTimeout(()=>{syncApi(c.k,'PUT',{t:SV._t||Date.now(),sv:SV}).then(()=>{window._syncErr=0}).catch(()=>{window._syncErr=1})},3000)}
+function syncApply(sv){window._v20Ready=1;window._syncHold=1;pendingImport=sv;const x=document.createElement('button');x.id='bkYes';$('#pbody').appendChild(x);x.click();x.remove();window._syncHold=0;persist();paintMe();paintV20()}
+async function syncBoot(){const c=syncCfg();if(!c){window._v20Ready=1;return}try{const d=await syncApi(c.k);if(d&&d.sv&&(d.t||0)>(SV._t||0)+1000){syncApply(d.sv);toast('⇅','진행도를 맞췄어요','다른 기기에서 저장한 최신 진행도를 불러왔어요.')}else{window._v20Ready=1;syncPush()}}catch(e){}window._v20Ready=1}
+function syncMsg(t,err){const e=$('#syncSt');e.textContent=t;e.classList.toggle('err',!!err)}
+function paintSync(){const c=syncCfg();$('#syncOn').hidden=!c;$('#syncOff').hidden=!!c;if(c)$('#syncCode').textContent=c.code;syncMsg('')}
+async function syncCreate(){const pw=$('#syncPw1').value.trim();if(pw.length<4){syncMsg('비밀번호를 4자 이상 입력해 주세요.',true);return}syncMsg('저장하고 있어요...');
+  try{let code='';for(let i=0;i<6;i++)code+=SYNC_ABC[crypto.getRandomValues(new Uint8Array(1))[0]%SYNC_ABC.length];const k=await syncHash(code,pw);SV._t=Date.now();await syncApi(k,'PUT',{t:SV._t,sv:SV});localStorage.setItem(SYNC_KEY,JSON.stringify({code,k}));paintSync();syncMsg('저장했어요. 다른 기기에서 이 코드와 비밀번호를 입력하세요.')}catch(e){syncMsg(RANK_FAIL.replace('랭킹 ',''),true)}}
+async function syncLoad(){const code=$('#syncCodeIn').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,''),pw=$('#syncPw2').value.trim();if(code.length!==6||pw.length<4){syncMsg('6자리 코드와 비밀번호를 입력해 주세요.',true);return}syncMsg('불러오고 있어요...');
+  try{const k=await syncHash(code,pw),d=await syncApi(k);if(!d||!d.sv){syncMsg('코드나 비밀번호가 맞지 않아요.',true);return}localStorage.setItem(SYNC_KEY,JSON.stringify({code,k}));syncApply(d.sv);paintSync();syncMsg(`불러왔어요. 귤 ${SV.coins.toLocaleString()} · 레벨 ${lvInfo().l}. 이제 두 기기가 자동으로 맞춰져요.`)}catch(e){syncMsg(RANK_FAIL.replace('랭킹 ',''),true)}}
+/* round end hook */
+function v20After(won,a){if(G.mode==='event'){evAdd(won?3:1);dailyAdd('evround')}if(won&&G.diff===4)badge('hellwin');if(won&&G.opp===17)badge('dragon');if(SV.unlockOpp>=13)badge('ch2');rankSubmit(a)}
+/* putt guide: bold two-tone ribbon instead of a thin white line */
+let puttRib=null;
+function puttGuide(P){if(!R3)return;if(!puttRib){const m1=new THREE.MeshBasicMaterial({color:col('#14202a'),transparent:true,opacity:.75,depthTest:false,depthWrite:false,toneMapped:false,side:THREE.DoubleSide}),m2=new THREE.MeshBasicMaterial({color:col('#ff2fd0'),transparent:true,depthTest:false,depthWrite:false,toneMapped:false,side:THREE.DoubleSide});puttRib=[new THREE.Mesh(new THREE.BufferGeometry(),m1),new THREE.Mesh(new THREE.BufferGeometry(),m2)];puttRib[0].renderOrder=7;puttRib[1].renderOrder=8;puttRib.forEach(o=>{o.frustumCulled=false;scene.add(o)})}
+  if(!P||P.length<2){puttRib.forEach(o=>o.visible=false);return}
+  [[.19,0],[.09,1]].forEach(([w,i])=>{const pos=[],idx=[];for(let k=0;k<P.length;k++){const a=P[Math.max(0,k-1)],b=P[Math.min(P.length-1,k+1)];let dx=b.x-a.x,dz=b.z-a.z;const l=Math.hypot(dx,dz)||1;dx/=l;dz/=l;const ww=w*(k===P.length-1?.2:1),y=P[k].y-.06;pos.push(P[k].x-dz*ww,y,P[k].z+dx*ww,P[k].x+dz*ww,y,P[k].z-dx*ww);if(k)idx.push(2*k-2,2*k-1,2*k,2*k-1,2*k+1,2*k)}
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);puttRib[i].geometry.dispose();puttRib[i].geometry=g;puttRib[i].visible=true})}
+/* wiring */
+$('#rankOpen').onclick=()=>{rankLen=G.len||9;const n=myNick();$('#rankNick').value=n;$('#rank').hidden=false;paintRank()};
+$('#rankClose').onclick=()=>{$('#rank').hidden=true};
+$('#rankTabs').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;rankLen=+b.dataset.l;paintRank()});
+$('#rankNick').addEventListener('change',e=>{const n=netClean(e.target.value);try{localStorage.setItem('jejuGolfNick',n)}catch(x){}e.target.value=n;toast('✔','닉네임 저장',n?`랭킹에 「${n}」(으)로 기록돼요.`:'닉네임이 없으면 랭킹에 기록되지 않아요.')});
+$('#syncOpen').onclick=()=>{paintSync();$('#sync').hidden=false};$('#syncClose').onclick=()=>{$('#sync').hidden=true};
+$('#syncMake').onclick=syncCreate;$('#syncLoad').onclick=syncLoad;$('#syncPush').onclick=()=>{syncPush();syncMsg('지금 진행도를 서버에 저장했어요.')};
+$('#syncCopy').onclick=()=>{const c=syncCfg();if(!c)return;try{navigator.clipboard.writeText(c.code).then(()=>syncMsg('코드를 복사했어요.'),()=>syncMsg('코드를 길게 눌러 복사하세요.'))}catch(e){syncMsg('코드를 길게 눌러 복사하세요.')}};
+$('#syncOffBtn').onclick=()=>{try{localStorage.removeItem(SYNC_KEY)}catch(e){}paintSync();syncMsg('이 기기의 연결을 해제했어요. 서버에 저장된 진행도는 그대로 남아요.')};
+$('#modeRow').addEventListener('click',e=>{if(!e.target.closest('[data-mode]'))return;setTimeout(()=>{HOLES=curC(G.opp);paintHoles();paintGo()},0)});
+setTimeout(syncBoot,1200);
+
+PL[1].name=NPCS[G.opp].name;HOLES=curC(G.opp);startHole(0);sizeMM();fitView();requestAnimationFrame(loop);showStart();
 
 (function(){const ovs=[...document.querySelectorAll('.ov')];let top=null;
   function upd(){const vis=ovs.filter(o=>!o.hidden);ovs.forEach(o=>o.classList.toggle('under',vis.indexOf(o)>-1&&vis.indexOf(o)<vis.length-1));
