@@ -859,14 +859,39 @@ const COURSES=[
  {name:'가파도 청보리 코스',themes:['canola','canola','coast','canola','oreum','canola','coast','canola','sunset'],tods:['morning','noon'],names:['상동 포구','청보리 물결','보리 돌담길','소망 전망대','하동 바다','고인돌 들판','보리 바람','가파 노을','청보리 그린'],w:32,bunk:3,water:.55,wind:3},
  {name:'추자도 파도 코스',themes:['cliff','coast','lava','cliff','coast','cliff','forest','cliff','sunset'],tods:['dawn','noon','sunset'],names:['상추자항','나바론 절벽','눈물의 십자가','대왕산','봉골레산','신양항','후포 숲길','직구도','추자 노을'],w:31,bunk:3,water:.6,wind:4,crater:1},
  {name:'차귀도 용궁 코스',themes:['cliff','lava','sunset','cliff','lava','cliff','coast','lava','sunset'],tods:['sunset','mist','noon'],names:['자구내 포구','장군바위','용궁 입구','수월봉','검은 모래','독수리 바위','당산봉','용왕의 길','용궁 그린'],w:30,bunk:3,water:.65,wind:4,crater:1,lighthouse:1}];
+
+var SIGF=(()=>{const sea=(h,c,shore,big)=>{if(!h.ocean)h.ocean=c.r()<.5?'L':'R';h.shore=shore;h.coastX=Math.round(c.par===3?c.rr(88,96):c.rr(68,78));h.links=shore==='beach';h.cliffH=Math.round(c.par===3?c.rr(3,5):c.rr(6,11));if(c.par>=4)h.bays=[[Math.round(c.L*c.rr(.35,.55)),Math.round(big*c.rr(.7,1)),Math.round(c.rr(40,60))],[Math.round(c.L*c.rr(.7,.85)),Math.round(big*c.rr(.5,.8)),Math.round(c.rr(36,52))]];h.lm=['boats']},
+ pots=(h,c,n)=>{for(let j=0;j<n;j++){const y=Math.round(c.L*c.rr(.42,.82));h.bunkers.push([y,Math.round(c.rr(-h.w/2+3,h.w/2-3)),Math.round(c.rr(3,4.5))])}},
+ lavaX=(h,c)=>{if(c.par===3)h.lava.push([Math.round(c.L*.45),0,22,10]);else h.lava.push([Math.round(c.L*c.rr(.42,.55)),0,Math.round(c.rr(26,34)),Math.round(c.rr(9,13))],[Math.round(c.L*.7),Math.round(c.side()*(h.w/2+12)),16,30])},
+ dog=(h,c,a,b)=>{const s=h.ocean?(h.ocean==='L'?1:-1):c.side();if(c.par===4)h.dg=[[Math.round(c.L*.52),s*Math.round(c.rr(a,b)),Math.round(c.rr(58,74))]];else if(c.par===5)h.dg=[[Math.round(c.L*.38),s*Math.round(c.rr(a*.8,b*.8)),60],[Math.round(c.L*.7),-s*Math.round(c.rr(a*.7,b*.7)),58]]},
+ water=(h,c)=>{if(c.par===3)h.over=Object.assign(h.over||{},{isl:1});else h.water.push([Math.round(c.L-c.gr-15),0,Math.round(c.rr(15,20)),6],[Math.round(c.L-c.gr-12),Math.round(c.side()*12),9,5])},
+ S={};
+ S[0]=(h,c)=>{h.w+=6;h.water=[];h.walls=true;h.elev=Math.round(c.rr(-2,3));h.hills.push([Math.round(c.L*.6),Math.round(c.side()*(h.w/2+44)),28,5]);h.sigd='돌담 귤밭 사이 넓고 편한 페어웨이예요.'};
+ S[1]=(h,c)=>{h.links=1;h.rolling=1.5;pots(h,c,c.par===3?2:5);h.sigd='항아리 벙커가 흩어진 우도 링크스예요.'};
+ S[2]=(h,c)=>{sea(h,c,h.theme==='coast'?'beach':'cliff',36);h.sigd='바다가 깊게 파고든 해안 코스예요.'};
+ S[3]=(h,c)=>{lavaX(h,c);if(c.k%2===0)sea(h,c,'beach',14);h.sigd='검은 현무암 지대가 페어웨이를 끊어요.'};
+ S[4]=(h,c)=>{h.elev=(c.k%2?-1:1)*Math.round(c.rr(10,16));h.rolling=1.5;h.hills.push([Math.round(c.L*.35),-Math.round(h.w/2+26),30,14],[Math.round(c.L*.7),Math.round(h.w/2+28),32,16]);h.over=Object.assign(h.over||{},{plat:4});h.sigd=h.elev>0?'오름을 오르는 큰 오르막 홀이에요.':'오름을 내려가는 큰 내리막 홀이에요.'};
+ S[5]=(h,c)=>{if(c.par===3)h.water=[[Math.round(c.L*.5),0,20,12],[Math.round(c.L*.5)-7,-14,11,7]];else{h.design={creek:Math.round(c.L*c.rr(.55,.65))};h.water.push([Math.round(c.L-c.gr-14),Math.round(c.side()*(h.gr+4)),12,8])}h.sigd='연못과 개울이 곳곳을 가로질러요.'};
+ S[6]=(h,c)=>{if(['coast','sunset'].includes(h.theme))sea(h,c,'beach',12);for(let j=0;j<3;j++)h.bunkers.push([Math.round(c.L*c.rr(.3,.85)),Math.round(c.side()*(h.w/2+c.rr(4,9))),Math.round(c.rr(9,13))]);h.sigd='모래 언덕과 해변이 이어진 코스예요.'};
+ S[7]=(h,c)=>{h.w=Math.max(26,h.w-3);if(c.par===3)h.over=Object.assign(h.over||{},{isl:1});else[[-1,-.3],[1,.2],[0,1]].forEach(([sx,sy])=>h.bunkers.push([Math.round(c.L+sy*(h.gr+4)),Math.round(sx*(h.gr+4)),Math.round(c.rr(4,6))]));h.sigd='벙커로 둘러싸인 챔피언십 그린이에요.'};
+ S[8]=(h,c)=>{dog(h,c,40,56);h.sigd=c.par===3?'노을 바다를 넘기는 파3예요.':'크게 꺾이는 애월 도그레그예요.'};
+ S[10]=(h,c)=>{h.w=Math.max(26,h.w-4);h.tod=c.k%3===0?'mist':h.tod;h.over=Object.assign(h.over||{},{valley:15,teeH:10});h.sigd='안개 낀 한라산 숲 골짜기를 지나요.'};
+ S[11]=(h,c)=>{lavaX(h,c);h.elev=Math.round(c.rr(6,14));h.hills.push([Math.round(c.L*.3),Math.round(c.side()*(h.w/2+30)),40,22],[Math.round(c.L*.75),Math.round(c.side()*(h.w/2+34)),36,18]);h.sigd='할망이 쌓은 오름과 용암 들판이에요.'};
+ S[12]=(h,c)=>{h.walls=true;lavaX(h,c);pots(h,c,3);h.sigd='돌담과 현무암이 미로처럼 이어져요.'};
+ S[13]=(h,c)=>{sea(h,c,h.theme==='cliff'?'cliff':'beach',24);pots(h,c,c.par===3?2:4);h.links=h.shore==='beach';h.sigd='등대 아래 바닷바람 링크스예요.'};
+ S[14]=(h,c)=>{sea(h,c,'cliff',40);h.elev=Math.round(c.rr(-2,2));h.sigd='사방이 바다인 국토 끝 절벽이에요.'};
+ S[15]=(h,c)=>{h.walls=true;h.flowers=[[Math.round(c.L*.35),-Math.round(h.w/2+18),22,60],[Math.round(c.L*.6),Math.round(h.w/2+18),22,60]];h.elev=Math.round(c.rr(-2,2));h.sigd='끝없는 청보리밭과 돌담 사이를 지나요.'};
+ S[16]=(h,c)=>{sea(h,c,'cliff',30);h.elev=(c.k%2?-1:1)*Math.round(c.rr(8,13));dog(h,c,34,48);h.over=Object.assign(h.over||{},{teeH:14});h.sigd='파도치는 절벽을 오르내리는 홀이에요.'};
+ S[17]=(h,c)=>{water(h,c);if(c.par>=4)lavaX(h,c);h.sigd=c.par===3?'물로 둘러싸인 용궁 그린이에요.':'물을 넘겨 그린을 노려야 해요.'};
+ return S})();
 var EVC={name:'감귤 축제 코스',themes:['orchard','canola','orchard','sunset','orchard','canola','orchard','oreum','sunset'],tods:['morning','noon','sunset'],names:['축제 입구','귤 따기 체험','유채 꽃길','노을 귤밭','귤 창고 마당','꽃 터널','하귤 언덕','축제 오름','불꽃놀이 그린'],w:42,bunk:2,water:.3,wind:1};
 const courseCache={};
 function courseFor(i){if(i===9)return HOLES_BASE;if(courseCache[i])return courseCache[i];
   const C=i===99?EVC:COURSES[i>9?i-1:i],HD=i>=13&&i<=17,r=rng(4242+i*977),PARS=[4,3,5,4,4,3,4,5,4],rr=(a,b)=>a+r()*(b-a),side=()=>r()<.5?-1:1;
   const holes=PARS.map((par,k)=>{const th=C.themes[k],coastal=th==='coast'||th==='cliff'||th==='sunset',ocean=coastal?(r()<.5?'L':'R'):null,away=ocean==='L'?1:ocean==='R'?-1:side();
     const L=Math.round(par===3?rr(148,182):par===4?rr(340,420):rr(488,540)),bend=par===3?0:Math.round(away*rr(8,38)),w=Math.round(clamp(C.w+(par===3?-12:0)+rr(-3,3),HD?24:26,48)),gr=HD?(par===3?11.5:12.5):par===3?14:15;
-    const bunkers=[];const nb=C.bunk+(par===5?1:0)+(HD?1:0);for(let b=0;b<nb;b++){let q;if(b===nb-1||par===3){const sd=side();q=[Math.round(L-rr(2,10)),Math.round(sd*rr(gr+2,gr+5)),Math.round(rr(5,7))]}else q=[Math.round(L*rr(.5,.75)),Math.round(side()*(w/2+rr(1,5))),Math.round(rr(6,9))];bunkers.push(q);if(r()<.7)bunkers.push([q[0]+Math.round(rr(-9,9)),q[1]+Math.sign(q[1])*Math.round(rr(3,6)),Math.round(q[2]*.68)])}
-    const water=[];if(r()<C.water){if(par===3||r()<.35){const py=Math.round(L*rr(.4,.55));water.push([py,0,Math.round(rr(16,21)),Math.round(rr(9,12))],[py-7,-Math.round(rr(10,16)),11,7],[py+6,Math.round(rr(10,16)),10,7])}else{const sd=ocean?away:side();{const py=Math.round(L*rr(.6,.82)),px=Math.round(sd*(w/2+rr(3,8)));water.push([py,px,Math.round(rr(11,16)),Math.round(rr(8,10))],[py+9,px+sd*6,9,6])}}}
+    const bunkers=[];const nb=C.bunk+(par===5?1:0)+(HD?1:0);for(let b=0;b<nb;b++){let q;if(b===nb-1||par===3){const sd=side();q=[Math.round(L-rr(2,10)),Math.round(sd*rr(gr+2,gr+5)),Math.round(rr(5,7))]}else q=[Math.round(L*rr(.5,.75)),Math.round(side()*(w/2+rr(1,5)-i/17*3)),Math.round(rr(6,9))];bunkers.push(q);if(r()<.7)bunkers.push([q[0]+Math.round(rr(-9,9)),q[1]+Math.sign(q[1])*Math.round(rr(3,6)),Math.round(q[2]*.68)])}
+    const water=[];if(r()<C.water){if(par===3||r()<.35){const py=Math.round(L*rr(.4,.55));water.push([py,0,Math.round(rr(16,21)),Math.round(rr(9,12))],[py-7,-Math.round(rr(10,16)),11,7],[py+6,Math.round(rr(10,16)),10,7])}else{const sd=ocean?away:side();{const py=Math.round(L*rr(.6,.82)),px=Math.round(sd*(w/2+rr(3,8)-i/17*4));water.push([py,px,Math.round(rr(11,16)),Math.round(rr(8,10))],[py+9,px+sd*6,9,6])}}}
     const lava=th==='lava'?(par===3?[[Math.round(L*.5),0,24,12]]:[[Math.round(L*rr(.55,.7)),0,Math.round(rr(26,32)),Math.round(rr(11,15))],[Math.round(L*.35),Math.round(side()*(w/2+18)),18,26]]):[];
     const flowers=th==='canola'?[[Math.round(L*.45),-Math.round(w/2+18),Math.round(rr(14,22)),Math.round(rr(24,40))],[Math.round(L*.6),Math.round(w/2+20),Math.round(rr(16,22)),Math.round(rr(28,44))]]:[];
     const hills=th==='oreum'?[[Math.round(L*.3),-Math.round(w/2+30),Math.round(rr(24,34)),Math.round(rr(8,15))],[Math.round(L*.7),Math.round(w/2+32),Math.round(rr(28,36)),Math.round(rr(9,16))]]:th==='orchard'?[[Math.round(L*.5),Math.round(side()*(w/2+50)),30,6]]:[];
@@ -876,9 +901,10 @@ function courseFor(i){if(i===9)return HOLES_BASE;if(courseCache[i])return course
     h.tilt=+(rr(-1,1)).toFixed(2);
     if(th==='orchard'||th==='canola')h.walls=true;
     if(C.crater&&ocean==='R')h.crater=1;if(C.lighthouse&&ocean==='L')h.lighthouse=1;
+    h.lvl=i===99?.2:i/17;if(SIGF[i])SIGF[i](h,{k,par,L,w,gr,r,rr,side,th});
     const d=[];if(ocean)d.push(`${ocean==='L'?'왼쪽':'오른쪽'}은 바다예요.`);if(lava.length)d.push('페어웨이를 가로지르는 용암지대를 넘겨야 해요.');if(water.length)d.push(water[0][1]===0?'앞을 가로막는 연못을 넘기세요.':'옆 연못을 조심하세요.');
     if(flowers.length)d.push('양옆은 유채꽃밭이에요.');if(elev>=8)d.push(`${elev}y 높은 오르막 그린이에요.`);else if(elev<=-5)d.push('시원한 내리막 홀이에요.');if(nb>=3)d.push('벙커가 많아요.');if(w<=32)d.push('페어웨이가 좁아요.');
-    if(!d.length)d.push(par===5?'길게 두 번에 나눠 공략하세요.':par===3?'한 번에 그린을 노리세요.':'페어웨이를 지키면 쉬워요.');h.desc=d.slice(0,2).join(' ');return h});
+    if(!d.length)d.push(par===5?'길게 두 번에 나눠 공략하세요.':par===3?'한 번에 그린을 노리세요.':'페어웨이를 지키면 쉬워요.');h.desc=(h.sigd?h.sigd+' ':'')+d.slice(0,h.sigd?1:2).join(' ');return h});
   return courseCache[i]=holes}
 const courseName=i=>i===99?'감귤 축제 코스':i===9?'제주 챔피언십 (탑동)':COURSES[i>9?i-1:i].name;
 const LIE={TEE:'티',FAIRWAY:'페어웨이',ROUGH:'러프',BUNKER:'벙커',BEACH:'모래사장',FLOWER:'유채꽃밭',LAVA:'용암지대',GREEN:'그린',WATER:'해저드',OCEAN:'바다',OB:'OB',PENALTY:'페널티 구역',WASTE:'웨이스트 에어리어'};
@@ -955,8 +981,8 @@ function hAt(x,y){
 const inEll=(x,y,z)=>{const c=cx(z[0])+z[1];return Math.hypot((x-c)/z[2],(y-z[0])/z[3])<1};
 /* natural OB / penalty-area boundaries that follow the hole */
 function setupBounds(){if(H.bd)return;const r=rng(H.L*13+Math.round(H.bend*7)+H.n.length*101+H.par),narrow=H.theme==='forest'?-4:0;
-  H.bd=[0,1].map(()=>({b:H.w/2+20+narrow+(H.hard?-6:0)+r()*14,a1:4+r()*5,f1:30+r()*30,p1:r()*6.28,a2:2+r()*2.5,f2:11+r()*8,p2:r()*6.28}));
-  const sides=[-1,1].filter(sd=>!oceanSide(sd)),n=sides.length?(['forest','lava','oreum','cliff'].includes(H.theme)?2:1)-(H.par===3&&r()<.5?1:0)+(H.hard?1:0):0;H.pz=[];
+  H.bd=[0,1].map(()=>({b:H.w/2+20+narrow+(H.hard?-4:0)-Math.round((H.lvl||0)*8)+r()*(14-(H.lvl||0)*5),a1:4+r()*5,f1:30+r()*30,p1:r()*6.28,a2:2+r()*2.5,f2:11+r()*8,p2:r()*6.28}));
+  const sides=[-1,1].filter(sd=>!oceanSide(sd)),n=sides.length?(['forest','lava','oreum','cliff'].includes(H.theme)?2:1)-(H.par===3&&r()<.5?1:0)+(H.hard?1:0)+((H.lvl||0)>.45?1:0):0;H.pz=[];
   for(let k=0;k<n;k++){const sd=sides[Math.floor(r()*sides.length)],y0=40+r()*Math.max(20,H.L-170),y1=Math.min(H.L+25,y0+60+r()*90);H.pz.push({side:sd,y0,y1})}
   H.backP=r()*6.28;
   const T=H.theme,hiT=['oreum','cliff','forest','lava'].includes(T),valT=['forest','lava','orchard'].includes(T)?.5:T==='oreum'?.4:.15;
@@ -2028,8 +2054,8 @@ function recClub(){
   if(G.lie==='GREEN')return PT;
   const r=playsLike();
   if(dist(G.ball,PIN)<=24&&G.lie==='FAIRWAY')return PT;
-  for(let i=PT-1;i>=0;i--){if(i===0&&G.lie!=='TEE')continue;if(clubD(i)*lieMul(G.lie,i)>=r*.97)return i}
-  return G.lie==='TEE'?0:1;
+  for(let i=PT-1;i>=0;i--){if(i===0&&G.lie!=='TEE')continue;if((G.lie==='BUNKER'||G.lie==='BEACH')&&i<7)continue;if(clubD(i)*lieMul(G.lie,i)>=r*.97)return i}
+  return G.lie==='TEE'?0:(G.lie==='BUNKER'||G.lie==='BEACH')?7:1;
 }
 function clubAllowed(i){if(G.lie==='GREEN')return i===PT;if(i===PT)return dist(G.ball,PIN)<=35;if(i===0)return G.lie==='TEE';return true}
 function aimToPin(){G.aim=Math.atan2(PIN.x-G.ball.x,PIN.y-G.ball.y)}
