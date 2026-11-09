@@ -2595,7 +2595,7 @@ function netListen(N){const on=e=>{if(G.net!==N)return;let m;try{m=JSON.parse(e.
 function netLook(){return JSON.parse(JSON.stringify(equipItems()))}
 function netName(){const n=netClean($('#pvpName').value);if(!n){netStatus('닉네임을 입력해 주세요.',true);return null}try{localStorage.setItem('jejuGolfNick',n)}catch(e){}return n}
 function netCheckCoins(){if(SV.coins<NET_STAKE){netStatus(`귤이 부족해요. ${NET_STAKE.toLocaleString()}귤이 있어야 대결할 수 있어요.`,true);return false}return true}
-const NET_FAIL='서버에 연결하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.';
+const NET_FAIL='서버에 연결하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.'+(location.hostname.endsWith('github.io')?'':' 지금 화면에서는 외부 서버 연결이 막혀 있어요. lc90me.github.io/jeju-ocean-golf 에서 이용해 주세요.');
 async function netMake(){const n=netName();if(!n||!netCheckCoins())return;netStatus('방을 만들고 있어요...');
   try{let code='';for(let i=0;i<6;i++){const c=String(1000+Math.floor(Math.random()*9000)),ex=await netApi(c);if(!ex||Date.now()-(ex.t||0)>7200000){code=c;break}}if(!code)throw new Error('busy');
    await netApi(code,'PUT',{t:Date.now(),state:'wait',host:{n,look:netLook()},course:G.opp,len:G.len,diff:G.diff,seed:Math.floor(Math.random()*1e9)});
@@ -2666,7 +2666,7 @@ function paintV20(){const b=$('#dmBox');if(!b)return;const D=dailyState();
   if(evOn()){const p=SV.evp||0,nx=EVT.steps.find(s=>p<s[0]);h+=`<div class="evb"><b>🍊 ${EVT.name} · ${EVT.end.slice(5).replace('-','.')}까지</b><span>축제 포인트 ${p}점${nx?` · ${nx[0]}점에 「${nx[1]}」`:' · 보상을 모두 받았어요'}<br>축제 코스에서 승리 3점, 참가 1점 · 귤 보상 1.5배</span></div>`}
   b.innerHTML=h;const eb=$('#modeRow [data-mode="event"]');if(eb){eb.disabled=!evOn();if(!evOn()&&G.mode==='event')G.mode='match'}}
 /* weekly ranking */
-const RANK_FAIL='랭킹 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.';
+const RANK_FAIL='랭킹 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.'+(location.hostname.endsWith('github.io')?'':' 지금 화면에서는 외부 서버 연결이 막혀 있어요. lc90me.github.io/jeju-ocean-golf 에서 이용해 주세요.');
 function weekId(){const d=new Date(),k=(d.getDay()+6)%7;d.setDate(d.getDate()-k);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function devId(){let v='';try{v=localStorage.getItem('jejuGolfDev')||''}catch(e){}if(!v){v=Array.from(crypto.getRandomValues(new Uint8Array(8)),x=>x.toString(16).padStart(2,'0')).join('');try{localStorage.setItem('jejuGolfDev',v)}catch(e){}}return v}
 function myNick(){let n='';try{n=localStorage.getItem('jejuGolfNick')||''}catch(e){}return netClean(n)}
